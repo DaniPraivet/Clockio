@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- Vista: Admin -->
+<BorderPane
+        xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="dev.danipraivet.controlador.ControladorAdmin"
+        style="-fx-background-color: #F5F5F5;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="16"
+              style="-fx-background-color: #4A148C; -fx-padding: 12 24;">
+            <Label text="Control de Asistencia - Administrador"
+                   style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblNombreAdmin"
+                   style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 13px;"/>
+            <Button text="Cerrar sesion" onAction="#onLogout"
+                    style="-fx-background-color: rgba(255,255,255,0.15);
+                           -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 4;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-padding: 8;">
+
+            <!-- Pestaña 1: Dashboard -->
+            <Tab text="Dashboard">
+                <VBox spacing="24" style="-fx-padding: 28;">
+                    <HBox spacing="16">
+
+                        <!-- Total empleados -->
+                        <VBox alignment="CENTER" spacing="6" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: white; -fx-background-radius: 10;
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+                                     -fx-padding: 24;">
+                            <Label fx:id="lblTotalEmpleados" text="0"
+                                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1565C0;"/>
+                            <Label text="Empleados" style="-fx-text-fill: #757575;"/>
+                        </VBox>
+
+                        <!-- Fichados hoy -->
+                        <VBox alignment="CENTER" spacing="6" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: white; -fx-background-radius: 10;
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+                                     -fx-padding: 24;">
+                            <Label fx:id="lblFichadosHoy" text="0"
+                                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                            <Label text="Fichados hoy" style="-fx-text-fill: #757575;"/>
+                        </VBox>
+
+                        <!-- Boton fichar -->
+                        <VBox alignment="CENTER" spacing="12" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: white; -fx-background-radius: 10;
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+                                     -fx-padding: 24;">
+                            <Label fx:id="lblEstadoAdmin" text=""
+                                   style="-fx-font-size: 14px; -fx-text-fill: #757575;"/>
+                            <Button fx:id="btnFicharAdmin"
+                                    text="Entrada"
+                                    onAction="#onFicharAdmin"
+                                    style="-fx-background-color: #43a047; -fx-text-fill: white;
+                                           -fx-font-size: 15px; -fx-font-weight: bold;
+                                           -fx-background-radius: 8; -fx-pref-width: 180px;
+                                           -fx-pref-height: 46px; -fx-cursor: hand;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </Tab>
+
+            <!-- Pestaña 2: Control de Fichajes -->
+            <Tab text="Fichajes">
+                <HBox spacing="16" style="-fx-padding: 16;">
+
+                    <!-- Tabla fichajes -->
+                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="Empleado:"/>
+                            <ComboBox fx:id="cmbFiltroEmpleado" prefWidth="200"
+                                      promptText="Todos"/>
+                            <Label text="Desde:"/>
+                            <DatePicker fx:id="dpFichajeDesde" prefWidth="150"/>
+                            <Label text="Hasta:"/>
+                            <DatePicker fx:id="dpFichajeHasta" prefWidth="150"/>
+                            <Button fx:id="btnBuscarFichajes" text="Buscar"
+                                    onAction="#onBuscarFichajes"
+                                    style="-fx-background-color: #1565C0; -fx-text-fill: white;
+                                           -fx-cursor: hand; -fx-background-radius: 4;"/>
+                        </HBox>
+
+                        <TableView fx:id="tablaFichajes" VBox.vgrow="ALWAYS" prefHeight="450">
+                            <columns>
+                                <TableColumn fx:id="colFicFecha"    text="Fecha"    prefWidth="100"/>
+                                <TableColumn fx:id="colFicEmpleado" text="Empleado" prefWidth="120"/>
+                                <TableColumn fx:id="colFicEntrada"  text="Entrada"  prefWidth="80"/>
+                                <TableColumn fx:id="colFicSalida"   text="Salida"   prefWidth="80"/>
+                                <TableColumn fx:id="colFicHoras"    text="Horas"    prefWidth="80"/>
+                                <TableColumn fx:id="colFicEstado"   text="Estado"   prefWidth="100"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Panel edicion -->
+                    <VBox spacing="10" prefWidth="260" minWidth="240"
+                          style="-fx-background-color: white; -fx-background-radius: 10;
+                                 -fx-padding: 16;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+
+                        <Label text="Editar fichaje"
+                               style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                        <Separator/>
+
+                        <Label text="Hora entrada (HH:mm):" style="-fx-font-size: 12px;"/>
+                        <TextField fx:id="txtEditEntrada" promptText="08:00"/>
+
+                        <Label text="Hora salida (HH:mm):" style="-fx-font-size: 12px;"/>
+                        <TextField fx:id="txtEditSalida" promptText="17:00"/>
+
+                        <CheckBox fx:id="chkEditFestivo"    text="Dia festivo"/>
+                        <CheckBox fx:id="chkEditJustificado" text="Justificado"/>
+
+                        <Label text="Observaciones:" style="-fx-font-size: 12px;"/>
+                        <TextArea fx:id="txtEditObservaciones"
+                                  prefHeight="80" wrapText="true"
+                                  promptText="Notas opcionales..."/>
+
+                        <Separator/>
+                        <Button fx:id="btnGuardarFichaje" text="Guardar cambios"
+                                onAction="#onGuardarFichaje" maxWidth="Infinity"
+                                style="-fx-background-color: #1565C0; -fx-text-fill: white;
+                                       -fx-cursor: hand; -fx-background-radius: 4;"/>
+                        <Button fx:id="btnEliminarFichaje" text="Eliminar fichaje"
+                                onAction="#onEliminarFichaje" maxWidth="Infinity"
+                                style="-fx-background-color: #c62828; -fx-text-fill: white;
+                                       -fx-cursor: hand; -fx-background-radius: 4;"/>
+                    </VBox>
+                </HBox>
+            </Tab>
+
+            <!-- Pestaña 3: Empleados (control total) -->
+            <Tab text="Empleados">
+                <VBox spacing="10" style="-fx-padding: 16;">
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtBuscarAdmin"
+                                   promptText="Buscar empleado..."
+                                   prefWidth="280" style="-fx-pref-height: 34px;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnDesbloquear" text="Desbloquear"
+                                onAction="#onDesbloquear"
+                                style="-fx-background-color: #F57F17; -fx-text-fill: white;
+                                       -fx-cursor: hand; -fx-background-radius: 4;"/>
+                        <Button fx:id="btnEliminarEmpleado" text="Eliminar definitivamente"
+                                onAction="#onEliminarEmpleado"
+                                style="-fx-background-color: #b71c1c; -fx-text-fill: white;
+                                       -fx-cursor: hand; -fx-background-radius: 4;"/>
+                    </HBox>
+
+                    <TableView fx:id="tablaEmpleadosAdmin" VBox.vgrow="ALWAYS" prefHeight="500">
+                        <columns>
+                            <TableColumn fx:id="colEmpNombre"       text="Nombre"        prefWidth="220"/>
+                            <TableColumn fx:id="colEmpDni"          text="DNI"           prefWidth="100"/>
+                            <TableColumn fx:id="colEmpRol"          text="Rol"           prefWidth="130"/>
+                            <TableColumn fx:id="colEmpEstado"       text="Estado"        prefWidth="90"/>
+                            <TableColumn fx:id="colEmpUltimoAcceso" text="Ultimo acceso" prefWidth="130"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+</BorderPane>

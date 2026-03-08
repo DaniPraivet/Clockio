@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- Vista: Login -->
+<BorderPane
+        xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="dev.danipraivet.controlador.ControladorLogin"
+        style="-fx-background-color: #F5F5F5;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="16"
+              maxWidth="380"
+              style="-fx-background-color: white;
+                     -fx-background-radius: 12;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 16, 0, 0, 4);
+                     -fx-padding: 40;">
+
+            <VBox alignment="CENTER" spacing="4">
+                <Label text="Control de Asistencia"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #212121;"/>
+                <Label text="Accede con tus credenciales"
+                       style="-fx-font-size: 13px; -fx-text-fill: #757575;"/>
+            </VBox>
+
+            <Separator/>
+
+            <VBox spacing="10">
+                <Label text="Usuario" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                <TextField fx:id="txtUsername"
+                           promptText="Introduce tu usuario"
+                           style="-fx-pref-height: 38px; -fx-background-radius: 6;
+                                  -fx-border-color: #BDBDBD; -fx-border-radius: 6;
+                                  -fx-padding: 0 12;"/>
+
+                <Label text="Contrasena" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                <PasswordField fx:id="txtContrasena"
+                               promptText="Introduce tu contrasena"
+                               style="-fx-pref-height: 38px; -fx-background-radius: 6;
+                                      -fx-border-color: #BDBDBD; -fx-border-radius: 6;
+                                      -fx-padding: 0 12;"/>
+            </VBox>
+
+            <Label fx:id="lblError"
+                   text=""
+                   visible="false"
+                   wrapText="true"
+                   style="-fx-text-fill: #c62828; -fx-font-size: 12px;
+                          -fx-background-color: #ffebee; -fx-background-radius: 4;
+                          -fx-padding: 8; -fx-max-width: 300;"/>
+
+            <Button fx:id="btnLogin"
+                    text="Entrar"
+                    maxWidth="Infinity"
+                    onAction="#onLogin"
+                    style="-fx-background-color: #1565C0; -fx-text-fill: white;
+                           -fx-font-size: 15px; -fx-font-weight: bold;
+                           -fx-background-radius: 6; -fx-pref-height: 42px;
+                           -fx-cursor: hand;"/>
+
+            <Label text="v1.0.0 - TFG"
+                   style="-fx-text-fill: #BDBDBD; -fx-font-size: 11px;"/>
+        </VBox>
+    </center>
+</BorderPane>

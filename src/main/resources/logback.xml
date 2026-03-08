@@ -1,0 +1,34 @@
+<configuration>
+
+    <!-- Logs en consola (desarrollo) -->
+    <appender name="CONSOLA" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Logs en fichero (útil para demostración del TFG) -->
+    <appender name="FICHERO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/control-asistencia.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/control-asistencia.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%logger{36}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Reducir verbosidad de librerías externas -->
+    <logger name="com.mysql"        level="WARN"/>
+    <logger name="io.github.palexdev" level="WARN"/>
+
+    <!-- Nivel DEBUG para el código propio durante desarrollo -->
+    <logger name="com.tuapp.controlasistencia" level="DEBUG"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLA"/>
+        <appender-ref ref="FICHERO"/>
+    </root>
+
+</configuration>
