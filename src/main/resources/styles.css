@@ -1,0 +1,9 @@
+/* ============================================================
+   Estilos globales — Control de Asistencia
+   Se irán añadiendo estilos a medida que se implementen las vistas
+   ============================================================ */
+
+.root {
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 14px;
+}
