@@ -31,50 +31,80 @@ public class ControladorRRHH implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(ControladorRRHH.class);
 
     // Pestaña Inicio
-    @FXML private Label  lblBienvenidaRRHH;
-    @FXML private Label  lblEstadoRRHH;
-    @FXML private Button btnFicharRRHH;
+    @FXML
+    private Label lblBienvenidaRRHH;
+    @FXML
+    private Label lblEstadoRRHH;
+    @FXML
+    private Button btnFicharRRHH;
 
     // Pestaña Empleados - tabla
-    @FXML private TextField                    txtBuscar;
-    @FXML private TableView<Empleado>          tablaEmpleados;
-    @FXML private TableColumn<Empleado, Integer> colCod;
-    @FXML private TableColumn<Empleado, String>  colNombre;
-    @FXML private TableColumn<Empleado, String>  colDni;
-    @FXML private TableColumn<Empleado, String>  colRol;
-    @FXML private TableColumn<Empleado, String>  colDep;
-    @FXML private TableColumn<Empleado, String>  colEstado;
+    @FXML
+    private TextField txtBuscar;
+    @FXML
+    private TableView<Empleado> tablaEmpleados;
+    @FXML
+    private TableColumn<Empleado, Integer> colCod;
+    @FXML
+    private TableColumn<Empleado, String> colNombre;
+    @FXML
+    private TableColumn<Empleado, String> colDni;
+    @FXML
+    private TableColumn<Empleado, String> colRol;
+    @FXML
+    private TableColumn<Empleado, String> colDep;
+    @FXML
+    private TableColumn<Empleado, String> colEstado;
 
     // Pestaña Empleados - formulario lateral
-    @FXML private TextField     txtFormCod;
-    @FXML private TextField     txtFormNombre;
-    @FXML private TextField     txtFormApellido1;
-    @FXML private TextField     txtFormApellido2;
-    @FXML private TextField     txtFormDni;
-    @FXML private TextField     txtFormEmail;
-    @FXML private TextField     txtFormTelefono;
-    @FXML private TextField     txtFormUsername;
-    @FXML private PasswordField txtFormContrasena;
-    @FXML private ComboBox<Rol> cmbFormRol;
-    @FXML private Button        btnGuardar;
-    @FXML private Button        btnNuevo;
-    @FXML private Button        btnBaja;
-    @FXML private Label         lblFormMensaje;
+    @FXML
+    private TextField txtFormCod;
+    @FXML
+    private TextField txtFormNombre;
+    @FXML
+    private TextField txtFormApellido1;
+    @FXML
+    private TextField txtFormApellido2;
+    @FXML
+    private TextField txtFormDni;
+    @FXML
+    private TextField txtFormEmail;
+    @FXML
+    private TextField txtFormTelefono;
+    @FXML
+    private TextField txtFormUsername;
+    @FXML
+    private PasswordField txtFormContrasena;
+    @FXML
+    private ComboBox<Rol> cmbFormRol;
+    @FXML
+    private Button btnGuardar;
+    @FXML
+    private Button btnNuevo;
+    @FXML
+    private Button btnBaja;
+    @FXML
+    private Label lblFormMensaje;
 
     // Pestaña Informes
-    @FXML private DatePicker         dpDesde;
-    @FXML private DatePicker         dpHasta;
-    @FXML private ComboBox<Empleado> cmbEmpleadoInforme;
-    @FXML private Button             btnGenerarPdf;
-    @FXML private Button             btnGenerarExcel;
+    @FXML
+    private DatePicker dpDesde;
+    @FXML
+    private DatePicker dpHasta;
+    @FXML
+    private ComboBox<Empleado> cmbEmpleadoInforme;
+    @FXML
+    private Button btnGenerarPdf;
+    @FXML
+    private Button btnGenerarExcel;
 
-    private final ServicioFichaje        servicioFichaje   = new ServicioFichaje();
-    private final ServicioEmpleado       servicioEmpleado  = new ServicioEmpleado();
-    private final ServicioAutenticacion  servicioAuth      = new ServicioAutenticacion();
+    private final ServicioFichaje servicioFichaje = new ServicioFichaje();
+    private final ServicioEmpleado servicioEmpleado = new ServicioEmpleado();
+    private final ServicioAutenticacion servicioAuth = new ServicioAutenticacion();
 
-    private final ObservableList<Empleado> empleados         = FXCollections.observableArrayList();
-    private       FilteredList<Empleado>   empleadosFiltrados;
-    private       boolean                  modoEdicion       = false;
+    private final ObservableList<Empleado> empleados = FXCollections.observableArrayList();
+    private FilteredList<Empleado> empleadosFiltrados;
+    private boolean modoEdicion = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -130,9 +160,9 @@ public class ControladorRRHH implements Initializable {
             return;
         }
         boolean confirmar = GestorAlertas.confirmar(
-            "Dar de baja",
-            "¿Seguro que quieres dar de baja a " + seleccionado.getNombreCompleto() + "?\n" +
-            "Su historial de fichajes se conservara."
+                "Dar de baja",
+                "¿Seguro que quieres dar de baja a " + seleccionado.getNombreCompleto() + "?\n" +
+                        "Su historial de fichajes se conservara."
         );
         if (!confirmar) return;
 
@@ -184,13 +214,13 @@ public class ControladorRRHH implements Initializable {
         colCod.setCellValueFactory(new PropertyValueFactory<>("codEmpleado"));
 
         colNombre.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getNombreCompleto()));
+                new SimpleStringProperty(cellData.getValue().getNombreCompleto()));
 
         colDni.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getDni()));
+                new SimpleStringProperty(cellData.getValue().getDni()));
 
         colRol.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getRol().getEtiqueta()));
+                new SimpleStringProperty(cellData.getValue().getRol().getEtiqueta()));
 
         colDep.setCellValueFactory(cellData -> {
             Empleado e = cellData.getValue();
@@ -205,18 +235,21 @@ public class ControladorRRHH implements Initializable {
 
         // Colorear filas segun estado
         tablaEmpleados.setRowFactory(tv -> new TableRow<>() {
-            @Override protected void updateItem(Empleado e, boolean empty) {
+            @Override
+            protected void updateItem(Empleado e, boolean empty) {
                 super.updateItem(e, empty);
-                if (empty || e == null)    setStyle("");
-                else if (!e.isActivo())     setStyle("-fx-background-color: #ffebee;");
-                else if (e.isBloqueado())   setStyle("-fx-background-color: #fff3e0;");
-                else                        setStyle("");
+                if (empty || e == null) setStyle("");
+                else if (!e.isActivo()) setStyle("-fx-background-color: #ffebee;");
+                else if (e.isBloqueado()) setStyle("-fx-background-color: #fff3e0;");
+                else setStyle("");
             }
         });
 
         // Al seleccionar un empleado, cargarlo en el formulario
         tablaEmpleados.getSelectionModel().selectedItemProperty().addListener(
-            (obs, old, nuevo) -> { if (nuevo != null) cargarEnFormulario(nuevo); }
+                (obs, old, nuevo) -> {
+                    if (nuevo != null) cargarEnFormulario(nuevo);
+                }
         );
 
         tablaEmpleados.setPlaceholder(new Label("No hay empleados registrados."));
@@ -231,8 +264,8 @@ public class ControladorRRHH implements Initializable {
                 if (texto == null || texto.isBlank()) return true;
                 String filtro = texto.toLowerCase();
                 return e.getNombreCompleto().toLowerCase().contains(filtro)
-                    || e.getDni().toLowerCase().contains(filtro)
-                    || e.getUsername().toLowerCase().contains(filtro);
+                        || e.getDni().toLowerCase().contains(filtro)
+                        || e.getUsername().toLowerCase().contains(filtro);
             });
         });
     }
@@ -290,9 +323,15 @@ public class ControladorRRHH implements Initializable {
     }
 
     private void limpiarFormulario() {
-        txtFormCod.clear(); txtFormNombre.clear(); txtFormApellido1.clear();
-        txtFormApellido2.clear(); txtFormDni.clear(); txtFormEmail.clear();
-        txtFormTelefono.clear(); txtFormUsername.clear(); txtFormContrasena.clear();
+        txtFormCod.clear();
+        txtFormNombre.clear();
+        txtFormApellido1.clear();
+        txtFormApellido2.clear();
+        txtFormDni.clear();
+        txtFormEmail.clear();
+        txtFormTelefono.clear();
+        txtFormUsername.clear();
+        txtFormContrasena.clear();
         cmbFormRol.setValue(Rol.EMPLEADO);
         tablaEmpleados.getSelectionModel().clearSelection();
     }

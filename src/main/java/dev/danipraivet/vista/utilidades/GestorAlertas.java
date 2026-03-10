@@ -8,7 +8,8 @@ import java.util.Optional;
 // Utilidad para mostrar dialogos JavaFX de forma rapida y consistente.
 public final class GestorAlertas {
 
-    private GestorAlertas() {}
+    private GestorAlertas() {
+    }
 
     public static void info(String titulo, String mensaje) {
         mostrar(Alert.AlertType.INFORMATION, titulo, mensaje);

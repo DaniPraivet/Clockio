@@ -9,7 +9,8 @@ public final class HashContrasena {
     // Factor de coste 12: buen equilibrio entre seguridad y rendimiento (~300ms en hardware moderno)
     private static final int COSTE = 12;
 
-    private HashContrasena() {}
+    private HashContrasena() {
+    }
 
     // Genera el hash BCrypt de una contrasena en texto plano
     public static String hashear(String contrasena) {

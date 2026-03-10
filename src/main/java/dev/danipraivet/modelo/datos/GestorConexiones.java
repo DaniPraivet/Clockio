@@ -25,9 +25,9 @@ public class GestorConexiones {
     private static final Map<Rol, String[]> CREDENCIALES = new EnumMap<>(Rol.class);
 
     static {
-        CREDENCIALES.put(Rol.EMPLEADO, new String[]{ ConfiguracionBD.EMPLEADO_USER, ConfiguracionBD.EMPLEADO_PASS });
-        CREDENCIALES.put(Rol.RRHH,     new String[]{ ConfiguracionBD.RRHH_USER,     ConfiguracionBD.RRHH_PASS     });
-        CREDENCIALES.put(Rol.ADMIN,    new String[]{ ConfiguracionBD.ADMIN_USER,     ConfiguracionBD.ADMIN_PASS    });
+        CREDENCIALES.put(Rol.EMPLEADO, new String[]{ConfiguracionBD.EMPLEADO_USER, ConfiguracionBD.EMPLEADO_PASS});
+        CREDENCIALES.put(Rol.RRHH, new String[]{ConfiguracionBD.RRHH_USER, ConfiguracionBD.RRHH_PASS});
+        CREDENCIALES.put(Rol.ADMIN, new String[]{ConfiguracionBD.ADMIN_USER, ConfiguracionBD.ADMIN_PASS});
 
         for (Rol rol : Rol.values()) {
             pools.put(rol, new ArrayDeque<>());
@@ -41,7 +41,8 @@ public class GestorConexiones {
         }
     }
 
-    private GestorConexiones() {}
+    private GestorConexiones() {
+    }
 
     // Devuelve una conexion del pool. Si esta vacia, crea una nueva.
     public static synchronized Connection getConexion(Rol rol) throws SQLException {
@@ -100,7 +101,11 @@ public class GestorConexiones {
         for (Map.Entry<Rol, Deque<Connection>> entry : pools.entrySet()) {
             Deque<Connection> pool = entry.getValue();
             for (Connection con : pool) {
-                try { con.close(); total++; } catch (SQLException ignored) {}
+                try {
+                    con.close();
+                    total++;
+                } catch (SQLException ignored) {
+                }
             }
             pool.clear();
         }

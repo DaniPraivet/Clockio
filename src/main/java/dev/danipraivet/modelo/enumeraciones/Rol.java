@@ -21,9 +21,9 @@ public enum Rol {
     public static Rol fromString(String valor) {
         if (valor == null) return EMPLEADO;
         return switch (valor.toUpperCase()) {
-            case "RRHH"  -> RRHH;
+            case "RRHH" -> RRHH;
             case "ADMIN" -> ADMIN;
-            default      -> EMPLEADO;
+            default -> EMPLEADO;
         };
     }
 

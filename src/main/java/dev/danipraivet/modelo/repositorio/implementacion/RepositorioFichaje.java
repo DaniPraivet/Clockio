@@ -27,49 +27,49 @@ public class RepositorioFichaje implements IRepositorioFichaje {
     }
 
     private static final String SQL_BASE =
-        "SELECT d.id, d.fecha, d.cod_empleado, " +
-        "       d.entrada_hora, d.salida_hora, " +
-        "       d.turno_entrada, d.turno_salida, " +
-        "       d.horas_trabajadas, d.horas_extras, " +
-        "       d.festivo, d.justificado, d.observaciones, " +
-        "       d.creado_en, d.modificado_en " +
-        "FROM dias d ";
+            "SELECT d.id, d.fecha, d.cod_empleado, " +
+                    "       d.entrada_hora, d.salida_hora, " +
+                    "       d.turno_entrada, d.turno_salida, " +
+                    "       d.horas_trabajadas, d.horas_extras, " +
+                    "       d.festivo, d.justificado, d.observaciones, " +
+                    "       d.creado_en, d.modificado_en " +
+                    "FROM dias d ";
 
     private static final String SQL_HOY =
-        SQL_BASE + "WHERE d.cod_empleado=? AND d.fecha=CURRENT_DATE LIMIT 1";
+            SQL_BASE + "WHERE d.cod_empleado=? AND d.fecha=CURRENT_DATE LIMIT 1";
 
     private static final String SQL_POR_EMPLEADO_RANGO =
-        SQL_BASE + "WHERE d.cod_empleado=? AND d.fecha BETWEEN ? AND ? ORDER BY d.fecha DESC";
+            SQL_BASE + "WHERE d.cod_empleado=? AND d.fecha BETWEEN ? AND ? ORDER BY d.fecha DESC";
 
     private static final String SQL_POR_FECHA =
-        SQL_BASE + "WHERE d.fecha=? ORDER BY d.entrada_hora";
+            SQL_BASE + "WHERE d.fecha=? ORDER BY d.entrada_hora";
 
     private static final String SQL_TODOS_CON_EMPLEADO =
-        "SELECT d.id, d.fecha, d.cod_empleado, " +
-        "       CONCAT(e.nombre,' ',e.apellido1) AS nombre_completo, " +
-        "       e.rol, " +
-        "       d.entrada_hora, d.salida_hora, " +
-        "       d.turno_entrada, d.turno_salida, " +
-        "       d.horas_trabajadas, d.horas_extras, " +
-        "       d.festivo, d.justificado, d.observaciones, " +
-        "       d.creado_en, d.modificado_en " +
-        "FROM dias d " +
-        "JOIN empleados e ON d.cod_empleado = e.cod_empleado " +
-        "WHERE d.fecha BETWEEN ? AND ? ORDER BY d.fecha DESC, e.apellido1";
+            "SELECT d.id, d.fecha, d.cod_empleado, " +
+                    "       CONCAT(e.nombre,' ',e.apellido1) AS nombre_completo, " +
+                    "       e.rol, " +
+                    "       d.entrada_hora, d.salida_hora, " +
+                    "       d.turno_entrada, d.turno_salida, " +
+                    "       d.horas_trabajadas, d.horas_extras, " +
+                    "       d.festivo, d.justificado, d.observaciones, " +
+                    "       d.creado_en, d.modificado_en " +
+                    "FROM dias d " +
+                    "JOIN empleados e ON d.cod_empleado = e.cod_empleado " +
+                    "WHERE d.fecha BETWEEN ? AND ? ORDER BY d.fecha DESC, e.apellido1";
 
     private static final String SQL_ACTUALIZAR =
-        "UPDATE dias SET entrada_hora=?, salida_hora=?, turno_entrada=?, turno_salida=?, " +
-        "horas_trabajadas=?, horas_extras=?, festivo=?, justificado=?, observaciones=? " +
-        "WHERE id=?";
+            "UPDATE dias SET entrada_hora=?, salida_hora=?, turno_entrada=?, turno_salida=?, " +
+                    "horas_trabajadas=?, horas_extras=?, festivo=?, justificado=?, observaciones=? " +
+                    "WHERE id=?";
 
     private static final String SQL_ELIMINAR = "DELETE FROM dias WHERE id=?";
 
     private static final String SQL_ESTA_FICHADO =
-        "SELECT COUNT(*) FROM dias WHERE cod_empleado=? AND fecha=CURRENT_DATE AND salida_hora IS NULL";
+            "SELECT COUNT(*) FROM dias WHERE cod_empleado=? AND fecha=CURRENT_DATE AND salida_hora IS NULL";
 
     // Stored procedure de MySQL para registrar fichaje
-    private static final String SQL_REGISTRAR_FICHAJE    = "CALL registrar_fichaje(?, @p_mensaje, @p_tipo)";
-    private static final String SQL_GET_OUT_PARAMS        = "SELECT @p_mensaje AS mensaje, @p_tipo AS tipo";
+    private static final String SQL_REGISTRAR_FICHAJE = "CALL registrar_fichaje(?, @p_mensaje, @p_tipo)";
+    private static final String SQL_GET_OUT_PARAMS = "SELECT @p_mensaje AS mensaje, @p_tipo AS tipo";
 
     @Override
     public String registrarFichaje(int codEmpleado) {
@@ -86,7 +86,7 @@ public class RepositorioFichaje implements IRepositorioFichaje {
             ResultSet rs = con.createStatement().executeQuery(SQL_GET_OUT_PARAMS);
             if (rs.next()) {
                 String mensaje = rs.getString("mensaje");
-                String tipo    = rs.getString("tipo");
+                String tipo = rs.getString("tipo");
                 log.info("Fichaje registrado - empleado: {} - {}", codEmpleado, tipo);
                 return mensaje;
             }
@@ -122,9 +122,9 @@ public class RepositorioFichaje implements IRepositorioFichaje {
         try {
             con = GestorConexiones.getConexion(rolConexion);
             PreparedStatement ps = con.prepareStatement(SQL_POR_EMPLEADO_RANGO);
-            ps.setInt  (1, codEmpleado);
-            ps.setDate (2, Date.valueOf(desde));
-            ps.setDate (3, Date.valueOf(hasta));
+            ps.setInt(1, codEmpleado);
+            ps.setDate(2, Date.valueOf(desde));
+            ps.setDate(3, Date.valueOf(hasta));
             ResultSet rs = ps.executeQuery();
             while (rs.next()) lista.add(mapear(rs));
         } catch (SQLException e) {
@@ -178,16 +178,16 @@ public class RepositorioFichaje implements IRepositorioFichaje {
         try {
             con = GestorConexiones.getConexion(rolConexion);
             PreparedStatement ps = con.prepareStatement(SQL_ACTUALIZAR);
-            ps.setTime     (1, f.getEntradaHora()  != null ? Time.valueOf(f.getEntradaHora())  : null);
-            ps.setTime     (2, f.getSalidaHora()   != null ? Time.valueOf(f.getSalidaHora())   : null);
-            ps.setString   (3, f.getTurnoEntrada() != null ? f.getTurnoEntrada().getEtiqueta() : null);
-            ps.setString   (4, f.getTurnoSalida()  != null ? f.getTurnoSalida().getEtiqueta()  : null);
+            ps.setTime(1, f.getEntradaHora() != null ? Time.valueOf(f.getEntradaHora()) : null);
+            ps.setTime(2, f.getSalidaHora() != null ? Time.valueOf(f.getSalidaHora()) : null);
+            ps.setString(3, f.getTurnoEntrada() != null ? f.getTurnoEntrada().getEtiqueta() : null);
+            ps.setString(4, f.getTurnoSalida() != null ? f.getTurnoSalida().getEtiqueta() : null);
             ps.setBigDecimal(5, f.getHorasTrabajadas());
             ps.setBigDecimal(6, f.getHorasExtras());
-            ps.setBoolean  (7, f.isFestivo());
-            ps.setBoolean  (8, f.isJustificado());
-            ps.setString   (9, f.getObservaciones());
-            ps.setInt      (10, f.getId());
+            ps.setBoolean(7, f.isFestivo());
+            ps.setBoolean(8, f.isJustificado());
+            ps.setString(9, f.getObservaciones());
+            ps.setInt(10, f.getId());
             boolean ok = ps.executeUpdate() > 0;
             log.info("Fichaje actualizado ID: {}", f.getId());
             return ok;
@@ -236,7 +236,7 @@ public class RepositorioFichaje implements IRepositorioFichaje {
 
     private Fichaje mapear(ResultSet rs) throws SQLException {
         Fichaje f = new Fichaje();
-        f.setId         (rs.getInt("id"));
+        f.setId(rs.getInt("id"));
         f.setCodEmpleado(rs.getInt("cod_empleado"));
 
         Date fecha = rs.getDate("fecha");
@@ -249,7 +249,7 @@ public class RepositorioFichaje implements IRepositorioFichaje {
         if (salida != null) f.setSalidaHora(salida.toLocalTime());
 
         f.setTurnoEntrada(Turno.fromString(rs.getString("turno_entrada")));
-        f.setTurnoSalida (Turno.fromString(rs.getString("turno_salida")));
+        f.setTurnoSalida(Turno.fromString(rs.getString("turno_salida")));
 
         BigDecimal horasTrab = rs.getBigDecimal("horas_trabajadas");
         f.setHorasTrabajadas(horasTrab != null ? horasTrab : BigDecimal.ZERO);
@@ -257,8 +257,8 @@ public class RepositorioFichaje implements IRepositorioFichaje {
         BigDecimal horasExtra = rs.getBigDecimal("horas_extras");
         f.setHorasExtras(horasExtra != null ? horasExtra : BigDecimal.ZERO);
 
-        f.setFestivo     (rs.getBoolean("festivo"));
-        f.setJustificado (rs.getBoolean("justificado"));
+        f.setFestivo(rs.getBoolean("festivo"));
+        f.setJustificado(rs.getBoolean("justificado"));
         f.setObservaciones(rs.getString("observaciones"));
 
         Timestamp creadoEn = rs.getTimestamp("creado_en");

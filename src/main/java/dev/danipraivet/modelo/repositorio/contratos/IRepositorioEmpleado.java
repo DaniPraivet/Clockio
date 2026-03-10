@@ -1,6 +1,7 @@
 package dev.danipraivet.modelo.repositorio.contratos;
 
 import dev.danipraivet.modelo.entidades.Empleado;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,13 +9,17 @@ import java.util.Optional;
 public interface IRepositorioEmpleado {
 
     Optional<Empleado> buscarPorCodigo(int codEmpleado);
+
     Optional<Empleado> buscarPorUsername(String username);
+
     Optional<Empleado> buscarPorDni(String dni);
 
     List<Empleado> listarTodos();
+
     List<Empleado> listarTodosIncluyendoBajas();
 
     boolean insertar(Empleado empleado);
+
     boolean actualizar(Empleado empleado);
 
     // Baja logica: desactiva el empleado sin borrar sus datos ni fichajes
@@ -30,5 +35,6 @@ public interface IRepositorioEmpleado {
     boolean registrarLoginExitoso(String username);
 
     boolean existeUsername(String username);
+
     boolean existeDni(String dni);
 }

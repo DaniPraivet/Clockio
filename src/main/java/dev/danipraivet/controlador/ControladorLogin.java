@@ -24,10 +24,14 @@ public class ControladorLogin implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(ControladorLogin.class);
 
-    @FXML private TextField     txtUsername;
-    @FXML private PasswordField txtContrasena;
-    @FXML private Button        btnLogin;
-    @FXML private Label         lblError;
+    @FXML
+    private TextField txtUsername;
+    @FXML
+    private PasswordField txtContrasena;
+    @FXML
+    private Button btnLogin;
+    @FXML
+    private Label lblError;
 
     private final ServicioAutenticacion servicioAuth = new ServicioAutenticacion();
 
@@ -52,7 +56,7 @@ public class ControladorLogin implements Initializable {
 
     @FXML
     public void onLogin() {
-        String username   = txtUsername.getText().trim();
+        String username = txtUsername.getText().trim();
         String contrasena = txtContrasena.getText();
 
         if (username.isEmpty() || contrasena.isEmpty()) {
@@ -80,8 +84,8 @@ public class ControladorLogin implements Initializable {
         log.info("Redirigiendo a vista para rol: {}", rol);
         switch (rol) {
             case EMPLEADO -> Aplicacion.navegarA("Empleado");
-            case RRHH     -> Aplicacion.navegarA("RRHH");
-            case ADMIN    -> Aplicacion.navegarA("Admin");
+            case RRHH -> Aplicacion.navegarA("RRHH");
+            case ADMIN -> Aplicacion.navegarA("Admin");
         }
     }
 

@@ -8,7 +8,8 @@ public final class GestorSesion {
 
     private static Empleado empleadoActual = null;
 
-    private GestorSesion() {}
+    private GestorSesion() {
+    }
 
     public static void iniciarSesion(Empleado empleado) {
         empleadoActual = empleado;

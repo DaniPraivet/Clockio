@@ -20,8 +20,8 @@ public class Aplicacion extends Application {
 
     private static Stage escenarioPrincipal;
 
-    private static final double ANCHO  = 1100;
-    private static final double ALTO   = 700;
+    private static final double ANCHO = 1100;
+    private static final double ALTO = 700;
 
     @Override
     public void start(Stage stage) {
@@ -107,15 +107,15 @@ public class Aplicacion extends Application {
 
     private void mostrarErrorConexion() {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-            javafx.scene.control.Alert.AlertType.ERROR
+                javafx.scene.control.Alert.AlertType.ERROR
         );
         alert.setTitle("Error de conexion");
         alert.setHeaderText("No se puede conectar a la base de datos");
         alert.setContentText(
-            "Comprueba que:\n" +
-            "  - MySQL esta en ejecucion\n" +
-            "  - Las credenciales en ConfiguracionBD.java son correctas\n" +
-            "  - El script SQL ha sido ejecutado en Workbench"
+                "Comprueba que:\n" +
+                        "  - MySQL esta en ejecucion\n" +
+                        "  - Las credenciales en ConfiguracionBD.java son correctas\n" +
+                        "  - El script SQL ha sido ejecutado en Workbench"
         );
         alert.showAndWait();
         escenarioPrincipal.show();

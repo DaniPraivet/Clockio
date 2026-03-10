@@ -11,37 +11,37 @@ import java.util.Objects;
 // Entidad que representa un registro de fichaje diario. Mapeada a la tabla 'dias' de MySQL.
 public class Fichaje {
 
-    private int        id;
-    private LocalDate  fecha;
-    private int        codEmpleado;
+    private int id;
+    private LocalDate fecha;
+    private int codEmpleado;
 
-    private Empleado   empleado;         // Solo presente si se hace JOIN con empleados
+    private Empleado empleado;         // Solo presente si se hace JOIN con empleados
 
-    private LocalTime  entradaHora;      // Nullable hasta que fiche
-    private LocalTime  salidaHora;       // Nullable hasta que salga
-    private Turno      turnoEntrada;     // Nullable
-    private Turno      turnoSalida;      // Nullable
+    private LocalTime entradaHora;      // Nullable hasta que fiche
+    private LocalTime salidaHora;       // Nullable hasta que salga
+    private Turno turnoEntrada;     // Nullable
+    private Turno turnoSalida;      // Nullable
 
     private BigDecimal horasTrabajadas;
     private BigDecimal horasExtras;
 
-    private boolean    festivo;
-    private boolean    justificado;
-    private String     observaciones;
+    private boolean festivo;
+    private boolean justificado;
+    private String observaciones;
 
     private LocalDateTime creadoEn;
     private LocalDateTime modificadoEn;
 
     public Fichaje() {
         this.horasTrabajadas = BigDecimal.ZERO;
-        this.horasExtras     = BigDecimal.ZERO;
+        this.horasExtras = BigDecimal.ZERO;
     }
 
     public Fichaje(int codEmpleado, LocalDate fecha, LocalTime entradaHora, Turno turnoEntrada) {
         this();
-        this.codEmpleado  = codEmpleado;
-        this.fecha        = fecha;
-        this.entradaHora  = entradaHora;
+        this.codEmpleado = codEmpleado;
+        this.fecha = fecha;
+        this.entradaHora = entradaHora;
         this.turnoEntrada = turnoEntrada;
     }
 
@@ -60,7 +60,7 @@ public class Fichaje {
         if (horasTrabajadas == null || horasTrabajadas.compareTo(BigDecimal.ZERO) == 0) {
             return "";
         }
-        int horas   = horasTrabajadas.intValue();
+        int horas = horasTrabajadas.intValue();
         int minutos = (int) Math.round((horasTrabajadas.doubleValue() - horas) * 60);
         return horas + "h " + String.format("%02d", minutos) + "m";
     }
@@ -68,54 +68,129 @@ public class Fichaje {
     // Estado resumido: "Trabajando", "Completado" o "Ausente"
     public String getEstado() {
         if (entradaHora == null) return "Ausente";
-        if (salidaHora  == null) return "Trabajando";
+        if (salidaHora == null) return "Trabajando";
         return "Completado";
     }
 
-    public int         getId()                              { return id; }
-    public void        setId(int id)                        { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public LocalDate   getFecha()                           { return fecha; }
-    public void        setFecha(LocalDate fecha)            { this.fecha = fecha; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int         getCodEmpleado()                     { return codEmpleado; }
-    public void        setCodEmpleado(int codEmpleado)      { this.codEmpleado = codEmpleado; }
+    public LocalDate getFecha() {
+        return fecha;
+    }
 
-    public Empleado    getEmpleado()                        { return empleado; }
-    public void        setEmpleado(Empleado empleado)       { this.empleado = empleado; }
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
 
-    public LocalTime   getEntradaHora()                     { return entradaHora; }
-    public void        setEntradaHora(LocalTime entradaHora){ this.entradaHora = entradaHora; }
+    public int getCodEmpleado() {
+        return codEmpleado;
+    }
 
-    public LocalTime   getSalidaHora()                      { return salidaHora; }
-    public void        setSalidaHora(LocalTime salidaHora)  { this.salidaHora = salidaHora; }
+    public void setCodEmpleado(int codEmpleado) {
+        this.codEmpleado = codEmpleado;
+    }
 
-    public Turno       getTurnoEntrada()                    { return turnoEntrada; }
-    public void        setTurnoEntrada(Turno turnoEntrada)  { this.turnoEntrada = turnoEntrada; }
+    public Empleado getEmpleado() {
+        return empleado;
+    }
 
-    public Turno       getTurnoSalida()                     { return turnoSalida; }
-    public void        setTurnoSalida(Turno turnoSalida)    { this.turnoSalida = turnoSalida; }
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
 
-    public BigDecimal  getHorasTrabajadas()                 { return horasTrabajadas; }
-    public void        setHorasTrabajadas(BigDecimal h)     { this.horasTrabajadas = h; }
+    public LocalTime getEntradaHora() {
+        return entradaHora;
+    }
 
-    public BigDecimal  getHorasExtras()                     { return horasExtras; }
-    public void        setHorasExtras(BigDecimal h)         { this.horasExtras = h; }
+    public void setEntradaHora(LocalTime entradaHora) {
+        this.entradaHora = entradaHora;
+    }
 
-    public boolean     isFestivo()                          { return festivo; }
-    public void        setFestivo(boolean festivo)          { this.festivo = festivo; }
+    public LocalTime getSalidaHora() {
+        return salidaHora;
+    }
 
-    public boolean     isJustificado()                      { return justificado; }
-    public void        setJustificado(boolean justificado)  { this.justificado = justificado; }
+    public void setSalidaHora(LocalTime salidaHora) {
+        this.salidaHora = salidaHora;
+    }
 
-    public String      getObservaciones()                   { return observaciones; }
-    public void        setObservaciones(String obs)         { this.observaciones = obs; }
+    public Turno getTurnoEntrada() {
+        return turnoEntrada;
+    }
 
-    public LocalDateTime getCreadoEn()                      { return creadoEn; }
-    public void          setCreadoEn(LocalDateTime t)       { this.creadoEn = t; }
+    public void setTurnoEntrada(Turno turnoEntrada) {
+        this.turnoEntrada = turnoEntrada;
+    }
 
-    public LocalDateTime getModificadoEn()                  { return modificadoEn; }
-    public void          setModificadoEn(LocalDateTime t)   { this.modificadoEn = t; }
+    public Turno getTurnoSalida() {
+        return turnoSalida;
+    }
+
+    public void setTurnoSalida(Turno turnoSalida) {
+        this.turnoSalida = turnoSalida;
+    }
+
+    public BigDecimal getHorasTrabajadas() {
+        return horasTrabajadas;
+    }
+
+    public void setHorasTrabajadas(BigDecimal h) {
+        this.horasTrabajadas = h;
+    }
+
+    public BigDecimal getHorasExtras() {
+        return horasExtras;
+    }
+
+    public void setHorasExtras(BigDecimal h) {
+        this.horasExtras = h;
+    }
+
+    public boolean isFestivo() {
+        return festivo;
+    }
+
+    public void setFestivo(boolean festivo) {
+        this.festivo = festivo;
+    }
+
+    public boolean isJustificado() {
+        return justificado;
+    }
+
+    public void setJustificado(boolean justificado) {
+        this.justificado = justificado;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String obs) {
+        this.observaciones = obs;
+    }
+
+    public LocalDateTime getCreadoEn() {
+        return creadoEn;
+    }
+
+    public void setCreadoEn(LocalDateTime t) {
+        this.creadoEn = t;
+    }
+
+    public LocalDateTime getModificadoEn() {
+        return modificadoEn;
+    }
+
+    public void setModificadoEn(LocalDateTime t) {
+        this.modificadoEn = t;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -125,13 +200,15 @@ public class Fichaje {
     }
 
     @Override
-    public int hashCode() { return Objects.hash(id); }
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     @Override
     public String toString() {
         return "Fichaje{id=" + id + ", codEmpleado=" + codEmpleado +
-               ", fecha=" + fecha + ", entrada=" + entradaHora +
-               ", salida=" + salidaHora + ", horas=" + horasTrabajadas +
-               ", estado='" + getEstado() + "'}";
+                ", fecha=" + fecha + ", entrada=" + entradaHora +
+                ", salida=" + salidaHora + ", horas=" + horasTrabajadas +
+                ", estado='" + getEstado() + "'}";
     }
 }

@@ -27,8 +27,13 @@ public class ServicioEmpleado {
 
     // Resultado de una operacion CRUD con exito/fallo y mensaje descriptivo
     public record ResultadoCRUD(boolean exito, String mensaje) {
-        public static ResultadoCRUD ok(String msg)    { return new ResultadoCRUD(true,  msg); }
-        public static ResultadoCRUD error(String msg) { return new ResultadoCRUD(false, msg); }
+        public static ResultadoCRUD ok(String msg) {
+            return new ResultadoCRUD(true, msg);
+        }
+
+        public static ResultadoCRUD error(String msg) {
+            return new ResultadoCRUD(false, msg);
+        }
     }
 
     public List<Empleado> listarActivos() {
@@ -68,8 +73,8 @@ public class ServicioEmpleado {
 
         boolean ok = repo.insertar(empleado);
         return ok
-            ? ResultadoCRUD.ok("Empleado creado correctamente.")
-            : ResultadoCRUD.error("Error al guardar en la base de datos.");
+                ? ResultadoCRUD.ok("Empleado creado correctamente.")
+                : ResultadoCRUD.error("Error al guardar en la base de datos.");
     }
 
     public ResultadoCRUD actualizar(Empleado empleado) {
@@ -78,8 +83,8 @@ public class ServicioEmpleado {
 
         boolean ok = repo.actualizar(empleado);
         return ok
-            ? ResultadoCRUD.ok("Datos actualizados correctamente.")
-            : ResultadoCRUD.error("Error al actualizar en la base de datos.");
+                ? ResultadoCRUD.ok("Datos actualizados correctamente.")
+                : ResultadoCRUD.error("Error al actualizar en la base de datos.");
     }
 
     public ResultadoCRUD cambiarContrasena(int codEmpleado, String nuevaContrasenaPlana) {
@@ -93,8 +98,8 @@ public class ServicioEmpleado {
         e.setPasswordHash(HashContrasena.hashear(nuevaContrasenaPlana));
         boolean ok = repo.actualizar(e);
         return ok
-            ? ResultadoCRUD.ok("Contrasena actualizada correctamente.")
-            : ResultadoCRUD.error("Error al actualizar la contrasena.");
+                ? ResultadoCRUD.ok("Contrasena actualizada correctamente.")
+                : ResultadoCRUD.error("Error al actualizar la contrasena.");
     }
 
     // Baja logica: desactiva el empleado sin borrar su historial de fichajes
@@ -104,8 +109,8 @@ public class ServicioEmpleado {
 
         boolean ok = repo.darDeBaja(codEmpleado);
         return ok
-            ? ResultadoCRUD.ok("Empleado dado de baja correctamente.")
-            : ResultadoCRUD.error("Error al dar de baja al empleado.");
+                ? ResultadoCRUD.ok("Empleado dado de baja correctamente.")
+                : ResultadoCRUD.error("Error al dar de baja al empleado.");
     }
 
     // Eliminacion fisica (solo Admin). Borra tambien todos sus fichajes en cascada.
@@ -115,8 +120,8 @@ public class ServicioEmpleado {
 
         boolean ok = repo.eliminar(codEmpleado);
         return ok
-            ? ResultadoCRUD.ok("Empleado eliminado definitivamente.")
-            : ResultadoCRUD.error("Error al eliminar el empleado.");
+                ? ResultadoCRUD.ok("Empleado eliminado definitivamente.")
+                : ResultadoCRUD.error("Error al eliminar el empleado.");
     }
 
     public ResultadoCRUD desbloquear(int codEmpleado) {
@@ -128,7 +133,7 @@ public class ServicioEmpleado {
         e.setIntentosFallidos(0);
         boolean ok = repo.actualizar(e);
         return ok
-            ? ResultadoCRUD.ok("Cuenta desbloqueada.")
-            : ResultadoCRUD.error("Error al desbloquear la cuenta.");
+                ? ResultadoCRUD.ok("Cuenta desbloqueada.")
+                : ResultadoCRUD.error("Error al desbloquear la cuenta.");
     }
 }

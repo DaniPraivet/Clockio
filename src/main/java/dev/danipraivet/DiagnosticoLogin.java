@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 // BORRAR cuando el login funcione correctamente.
 public class DiagnosticoLogin {
 
-    private static final String USERNAME   = "jrodriguez";
+    private static final String USERNAME = "jrodriguez";
     private static final String CONTRASENA = "Emp1234!";
 
     public static void main(String[] args) throws Exception {
@@ -38,9 +38,9 @@ public class DiagnosticoLogin {
                 return;
             }
 
-            String hashEnBD   = rs.getString("password_hash");
+            String hashEnBD = rs.getString("password_hash");
             boolean bloqueado = rs.getBoolean("bloqueado");
-            int intentos      = rs.getInt("intentos_fallidos");
+            int intentos = rs.getInt("intentos_fallidos");
 
             System.out.println("[2] Hash en BD: " + hashEnBD.substring(0, Math.min(30, hashEnBD.length())) + "...");
             System.out.println("    Bloqueado: " + bloqueado + "  Intentos: " + intentos);
@@ -74,7 +74,7 @@ public class DiagnosticoLogin {
     }
 
     private static void aplicarTodosLosHashes(Connection con) throws Exception {
-        int[] codigos      = {1001,        1002,       1003,       1004,       1005};
+        int[] codigos = {1001, 1002, 1003, 1004, 1005};
         String[] passwords = {"Admin1234!", "RRHH1234!", "Emp1234!", "Emp1234!", "Emp1234!"};
 
         PreparedStatement ps = con.prepareStatement(
@@ -85,7 +85,7 @@ public class DiagnosticoLogin {
         for (int i = 0; i < codigos.length; i++) {
             String hash = HashContrasena.hashear(passwords[i]);
             ps.setString(1, hash);
-            ps.setInt   (2, codigos[i]);
+            ps.setInt(2, codigos[i]);
             if (ps.executeUpdate() > 0) {
                 System.out.printf("    cod %d actualizado: %s...%n", codigos[i], hash.substring(0, 20));
                 total++;
@@ -95,10 +95,10 @@ public class DiagnosticoLogin {
         System.out.println("\n    " + total + "/5 empleados actualizados\n");
         System.out.println("=".repeat(60));
         System.out.println("  Credenciales listas:");
-        System.out.printf("  %-15s %s%n", "cgarcia",    "Admin1234!");
-        System.out.printf("  %-15s %s%n", "mmartinez",  "RRHH1234!");
+        System.out.printf("  %-15s %s%n", "cgarcia", "Admin1234!");
+        System.out.printf("  %-15s %s%n", "mmartinez", "RRHH1234!");
         System.out.printf("  %-15s %s%n", "jrodriguez", "Emp1234!");
-        System.out.printf("  %-15s %s%n", "alopez",     "Emp1234!");
+        System.out.printf("  %-15s %s%n", "alopez", "Emp1234!");
         System.out.printf("  %-15s %s%n", "pfernandez", "Emp1234!");
         System.out.println("=".repeat(60));
     }

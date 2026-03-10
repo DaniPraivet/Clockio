@@ -55,7 +55,7 @@ public class ServicioAutenticacion {
             if (!HashContrasena.verificar(contrasena, empleado.getPasswordHash())) {
                 repo.registrarIntentoFallido(username);
                 log.warn("Login fallido - contrasena incorrecta: '{}' (intentos: {})",
-                         username, empleado.getIntentosFallidos() + 1);
+                        username, empleado.getIntentosFallidos() + 1);
                 return ResultadoLogin.CREDENCIALES_INCORRECTAS;
             }
 
@@ -81,10 +81,10 @@ public class ServicioAutenticacion {
     public String getMensajeError(ResultadoLogin resultado) {
         return switch (resultado) {
             case CREDENCIALES_INCORRECTAS -> "Usuario o contrasena incorrectos.";
-            case CUENTA_BLOQUEADA         -> "Cuenta bloqueada. Contacta con RRHH.";
-            case CUENTA_INACTIVA          -> "Esta cuenta no esta activa.";
-            case ERROR_SISTEMA            -> "Error del sistema. Intentalo de nuevo.";
-            case EXITO                    -> "";
+            case CUENTA_BLOQUEADA -> "Cuenta bloqueada. Contacta con RRHH.";
+            case CUENTA_INACTIVA -> "Esta cuenta no esta activa.";
+            case ERROR_SISTEMA -> "Error del sistema. Intentalo de nuevo.";
+            case EXITO -> "";
         };
     }
 }

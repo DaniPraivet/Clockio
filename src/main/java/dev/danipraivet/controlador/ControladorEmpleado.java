@@ -28,26 +28,38 @@ public class ControladorEmpleado implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(ControladorEmpleado.class);
 
-    private static final DateTimeFormatter FMT_HORA  = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter FMT_HORA = DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter FMT_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    @FXML private Label   lblBienvenida;
-    @FXML private Label   lblFechaHora;
-    @FXML private Label   lblEstadoFichaje;
-    @FXML private Button  btnFichar;
+    @FXML
+    private Label lblBienvenida;
+    @FXML
+    private Label lblFechaHora;
+    @FXML
+    private Label lblEstadoFichaje;
+    @FXML
+    private Button btnFichar;
 
-    @FXML private TableView<Fichaje>              tablaHistorial;
-    @FXML private TableColumn<Fichaje, LocalDate> colFecha;
-    @FXML private TableColumn<Fichaje, String>    colEntrada;
-    @FXML private TableColumn<Fichaje, String>    colSalida;
-    @FXML private TableColumn<Fichaje, String>    colTurno;
-    @FXML private TableColumn<Fichaje, String>    colHoras;
-    @FXML private TableColumn<Fichaje, String>    colEstado;
+    @FXML
+    private TableView<Fichaje> tablaHistorial;
+    @FXML
+    private TableColumn<Fichaje, LocalDate> colFecha;
+    @FXML
+    private TableColumn<Fichaje, String> colEntrada;
+    @FXML
+    private TableColumn<Fichaje, String> colSalida;
+    @FXML
+    private TableColumn<Fichaje, String> colTurno;
+    @FXML
+    private TableColumn<Fichaje, String> colHoras;
+    @FXML
+    private TableColumn<Fichaje, String> colEstado;
 
-    @FXML private Label lblTotalHorasMes;
+    @FXML
+    private Label lblTotalHorasMes;
 
-    private final ServicioFichaje       servicioFichaje = new ServicioFichaje();
-    private final ServicioAutenticacion servicioAuth    = new ServicioAutenticacion();
+    private final ServicioFichaje servicioFichaje = new ServicioFichaje();
+    private final ServicioAutenticacion servicioAuth = new ServicioAutenticacion();
 
     private final ObservableList<Fichaje> fichajes = FXCollections.observableArrayList();
 
@@ -105,16 +117,17 @@ public class ControladorEmpleado implements Initializable {
         fichajes.setAll(lista);
 
         double totalHoras = lista.stream()
-            .filter(f -> f.getHorasTrabajadas() != null)
-            .mapToDouble(f -> f.getHorasTrabajadas().doubleValue())
-            .sum();
+                .filter(f -> f.getHorasTrabajadas() != null)
+                .mapToDouble(f -> f.getHorasTrabajadas().doubleValue())
+                .sum();
         lblTotalHorasMes.setText(String.format("Total mes: %.1f h", totalHoras));
     }
 
     private void configurarTabla() {
         colFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         colFecha.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(LocalDate item, boolean empty) {
+            @Override
+            protected void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty || item == null ? null : item.format(FMT_FECHA));
             }
@@ -139,21 +152,22 @@ public class ControladorEmpleado implements Initializable {
         });
 
         colHoras.setCellValueFactory(cellData ->
-            new javafx.beans.property.SimpleStringProperty(cellData.getValue().getHorasFormateadas())
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getHorasFormateadas())
         );
 
         colEstado.setCellValueFactory(cellData ->
-            new javafx.beans.property.SimpleStringProperty(cellData.getValue().getEstado())
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getEstado())
         );
 
         // Colorear fila segun estado del fichaje
         tablaHistorial.setRowFactory(tv -> new TableRow<>() {
-            @Override protected void updateItem(Fichaje f, boolean empty) {
+            @Override
+            protected void updateItem(Fichaje f, boolean empty) {
                 super.updateItem(f, empty);
-                if (empty || f == null)                    setStyle("");
+                if (empty || f == null) setStyle("");
                 else if ("Trabajando".equals(f.getEstado())) setStyle("-fx-background-color: #e8f5e9;");
-                else if ("Ausente".equals(f.getEstado()))    setStyle("-fx-background-color: #fff3e0;");
-                else                                         setStyle("");
+                else if ("Ausente".equals(f.getEstado())) setStyle("-fx-background-color: #fff3e0;");
+                else setStyle("");
             }
         });
 
