@@ -1,5 +1,6 @@
 package dev.danipraivet.controlador;
 
+import dev.danipraivet.modelo.servicio.ServicioInformes;
 import dev.danipraivet.vista.Aplicacion;
 import dev.danipraivet.vista.utilidades.GestorAlertas;
 import dev.danipraivet.modelo.entidades.Empleado;
@@ -16,9 +17,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +32,7 @@ import java.util.ResourceBundle;
 public class ControladorRRHH implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(ControladorRRHH.class);
+    private final ServicioInformes servicioInformes = new ServicioInformes();
 
     // Pestaña Inicio
     @FXML
@@ -173,14 +177,44 @@ public class ControladorRRHH implements Initializable {
 
     @FXML
     public void onGenerarPdf() {
-        // TODO: implementar ServicioInformes.generarPDF(empleado, desde, hasta)
-        GestorAlertas.info("PDF", "Generacion de PDF - proximamente.");
+        Empleado empleado = cmbEmpleadoInforme.getValue();
+        LocalDate desde = dpDesde.getValue() != null ? dpDesde.getValue() : LocalDate.now();
+        LocalDate hasta = dpHasta.getValue() != null ? dpHasta.getValue() : LocalDate.now();
+
+        FileChooser selector = new FileChooser();
+        selector.setTitle("Guardar PDF");
+        selector.setInitialFileName("informe_asistencia_" + LocalDate.now() + ".pdf");
+        selector.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+        File destino = selector.showSaveDialog(Aplicacion.getEscenarioPrincipal());
+        if (destino == null) return;
+
+        var fichajes = empleado != null
+                ? servicioFichaje.getHistorial(empleado.getCodEmpleado(), desde, hasta)
+                : servicioFichaje.getTodosConEmpleado(desde, hasta);
+
+        boolean ok = servicioInformes.generarPDF(empleado, fichajes, desde, hasta, destino);
+        if (ok) GestorAlertas.info("PDF generado", "Documento guardado en: \n" + destino.getAbsolutePath());
+        else GestorAlertas.error("Error", "No se pudo generar el PDF");
     }
 
     @FXML
     public void onGenerarExcel() {
-        // TODO: implementar ServicioInformes.generarExcel(empleado, desde, hasta)
-        GestorAlertas.info("Excel", "Generacion de Excel - proximamente.");
+        Empleado empleado = cmbEmpleadoInforme.getValue();
+        LocalDate desde = dpDesde.getValue() != null ? dpDesde.getValue() : LocalDate.now();
+        LocalDate hasta = dpHasta.getValue() != null ? dpHasta.getValue() : LocalDate.now();
+
+        FileChooser selector = new FileChooser();
+        selector.setTitle("Guardar Excel");
+        selector.setInitialFileName("informe_asistencia_" + LocalDate.now() + ".xlsx");
+        File destino = selector.showSaveDialog(Aplicacion.getEscenarioPrincipal());
+        if (destino == null) return;
+
+        var fichajes = empleado != null
+                ? servicioFichaje.getHistorial(empleado.getCodEmpleado(), desde, hasta)
+                : servicioFichaje.getTodosConEmpleado(desde, hasta);
+        boolean ok = servicioInformes.generarExcel(empleado, fichajes, desde, hasta, destino);
+        if (ok) GestorAlertas.info("Excel generado", "Hoja guardada en:\n" + destino.getAbsolutePath());
+        else GestorAlertas.error("Error", "No se pudo generar el Excel");
     }
 
     @FXML

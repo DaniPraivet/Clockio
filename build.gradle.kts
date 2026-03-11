@@ -47,3 +47,11 @@ tasks.jar {
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+tasks.named<JavaExec>("run") {
+    jvmArgs = listOf(
+        "--add-opens", "javafx.graphics/com.sun.javafx.application=ALL-UNNAMED",
+        "--add-opens", "javafx.base/com.sun.javafx=ALL-UNNAMED",
+        "--add-opens", "javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED"
+    )
+}

@@ -4,6 +4,8 @@
 <?import javafx.scene.layout.*?>
 
 <!-- Login -->
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane
         xmlns="http://javafx.com/javafx/21"
         xmlns:fx="http://javafx.com/fxml/1"
@@ -15,7 +17,13 @@
               style="-fx-background-color: white;
                      -fx-background-radius: 12;
                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 16, 0, 0, 4);
-                     -fx-padding: 40;">
+                     -fx-padding: 20;">
+
+            <ImageView fitWidth="200" fitHeight="200" preserveRatio="true">
+                <image>
+                    <Image url="@fuente/../logo/logo_negro.png"/>
+                </image>
+            </ImageView>
 
             <VBox alignment="CENTER" spacing="4">
                 <Label text="Control de Asistencia"
@@ -32,14 +40,14 @@
                            promptText="Introduce tu usuario"
                            style="-fx-pref-height: 38px; -fx-background-radius: 6;
                                   -fx-border-color: #BDBDBD; -fx-border-radius: 6;
-                                  -fx-padding: 0 12;"/>
+                                  -fx-padding: 10 12;"/>
 
-                <Label text="Contrasena" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                <Label text="Contraseña" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
                 <PasswordField fx:id="txtContrasena"
-                               promptText="Introduce tu contrasena"
+                               promptText="Introduce tu contraseña"
                                style="-fx-pref-height: 38px; -fx-background-radius: 6;
                                       -fx-border-color: #BDBDBD; -fx-border-radius: 6;
-                                      -fx-padding: 0 12;"/>
+                                      -fx-padding: 10 12;"/>
             </VBox>
 
             <Label fx:id="lblError"
@@ -55,9 +63,9 @@
                     maxWidth="Infinity"
                     onAction="#onLogin"
                     style="-fx-background-color: #1565C0; -fx-text-fill: white;
-                           -fx-font-size: 15px; -fx-font-weight: bold;
+                           -fx-font-size: 18px; -fx-font-weight: bold;
                            -fx-background-radius: 6; -fx-pref-height: 42px;
-                           -fx-cursor: hand;"/>
+                           -fx-cursor: hand; -fx-padding: 8"/>
 
             <Label text="v1.0.0 - Clockio"
                    style="-fx-text-fill: #BDBDBD; -fx-font-size: 11px;"/>

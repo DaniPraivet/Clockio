@@ -1,9 +1,10 @@
-/* ============================================================
-   Estilos globales — Control de Asistencia
-   Se irán añadiendo estilos a medida que se implementen las vistas
-   ============================================================ */
+@font-face {
+    font-family: "ClockioFont";
+    src: url("dev/danipraivet/fuente/fuente.ttf");
+}
 
 .root {
-    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-family: "ClockioFont";
     -fx-font-size: 14px;
+    -fx-font-smoothing-type: lcd;
 }
