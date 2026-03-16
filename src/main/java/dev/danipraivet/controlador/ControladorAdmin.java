@@ -1,13 +1,17 @@
 package dev.danipraivet.controlador;
 
-import dev.danipraivet.vista.Aplicacion;
-import dev.danipraivet.vista.utilidades.GestorAlertas;
 import dev.danipraivet.modelo.entidades.Empleado;
 import dev.danipraivet.modelo.entidades.Fichaje;
 import dev.danipraivet.modelo.servicio.ServicioAutenticacion;
 import dev.danipraivet.modelo.servicio.ServicioEmpleado;
 import dev.danipraivet.modelo.servicio.ServicioFichaje;
 import dev.danipraivet.modelo.utilidades.GestorSesion;
+import dev.danipraivet.vista.Aplicacion;
+import dev.danipraivet.vista.utilidades.GestorAlertas;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXDatePicker;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,15 +29,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
-// Controlador de la vista Admin.fxml.
-// Extiende las funciones de RRHH con control total de fichajes y eliminacion de empleados.
 public class ControladorAdmin implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(ControladorAdmin.class);
     private static final DateTimeFormatter FMT_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter FMT_HORA = DateTimeFormatter.ofPattern("HH:mm");
-
-    // Dashboard
+    private final ServicioFichaje servicioFichaje = new ServicioFichaje();
+    private final ServicioEmpleado servicioEmpleado = new ServicioEmpleado();
+    private final ServicioAutenticacion servicioAuth = new ServicioAutenticacion();
+    private final ObservableList<Fichaje> fichajes = FXCollections.observableArrayList();
+    private final ObservableList<Empleado> empleados = FXCollections.observableArrayList();
     @FXML
     private Label lblNombreAdmin;
     @FXML
@@ -43,17 +48,15 @@ public class ControladorAdmin implements Initializable {
     @FXML
     private Label lblEstadoAdmin;
     @FXML
-    private Button btnFicharAdmin;
-
-    // Pestaña Fichajes - filtros y tabla
+    private MFXButton btnFicharAdmin;
     @FXML
-    private DatePicker dpFichajeDesde;
+    private MFXDatePicker dpFichajeDesde;
     @FXML
-    private DatePicker dpFichajeHasta;
+    private MFXDatePicker dpFichajeHasta;
     @FXML
-    private ComboBox<Empleado> cmbFiltroEmpleado;
+    private MFXComboBox<Empleado> cmbFiltroEmpleado;
     @FXML
-    private Button btnBuscarFichajes;
+    private MFXButton btnBuscarFichajes;
     @FXML
     private TableView<Fichaje> tablaFichajes;
     @FXML
@@ -68,8 +71,6 @@ public class ControladorAdmin implements Initializable {
     private TableColumn<Fichaje, String> colFicHoras;
     @FXML
     private TableColumn<Fichaje, String> colFicEstado;
-
-    // Pestaña Fichajes - panel de edicion
     @FXML
     private TextField txtEditEntrada;
     @FXML
@@ -81,11 +82,9 @@ public class ControladorAdmin implements Initializable {
     @FXML
     private TextArea txtEditObservaciones;
     @FXML
-    private Button btnGuardarFichaje;
+    private MFXButton btnGuardarFichaje;
     @FXML
-    private Button btnEliminarFichaje;
-
-    // Pestaña Empleados
+    private MFXButton btnEliminarFichaje;
     @FXML
     private TableView<Empleado> tablaEmpleadosAdmin;
     @FXML
@@ -101,23 +100,16 @@ public class ControladorAdmin implements Initializable {
     @FXML
     private TextField txtBuscarAdmin;
     @FXML
-    private Button btnDesbloquear;
+    private MFXButton btnDesbloquear;
     @FXML
-    private Button btnEliminarEmpleado;
-
-    private final ServicioFichaje servicioFichaje = new ServicioFichaje();
-    private final ServicioEmpleado servicioEmpleado = new ServicioEmpleado();
-    private final ServicioAutenticacion servicioAuth = new ServicioAutenticacion();
-
-    private final ObservableList<Fichaje> fichajes = FXCollections.observableArrayList();
-    private final ObservableList<Empleado> empleados = FXCollections.observableArrayList();
+    private MFXButton btnEliminarEmpleado;
     private FilteredList<Empleado> empleadosFiltrados;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTablaFichajes();
         configurarTablaEmpleados();
-        cargarDatos();
+        Platform.runLater(this::cargarDatos);
     }
 
     @FXML
@@ -129,10 +121,8 @@ public class ControladorAdmin implements Initializable {
 
     @FXML
     public void onBuscarFichajes() {
-        LocalDate desde = dpFichajeDesde.getValue() != null
-                ? dpFichajeDesde.getValue() : LocalDate.now().withDayOfMonth(1);
-        LocalDate hasta = dpFichajeHasta.getValue() != null
-                ? dpFichajeHasta.getValue() : LocalDate.now();
+        LocalDate desde = dpFichajeDesde.getValue() != null ? dpFichajeDesde.getValue() : LocalDate.now().withDayOfMonth(1);
+        LocalDate hasta = dpFichajeHasta.getValue() != null ? dpFichajeHasta.getValue() : LocalDate.now();
 
         Empleado filtroEmp = cmbFiltroEmpleado.getValue();
         List<Fichaje> resultado;
@@ -144,6 +134,7 @@ public class ControladorAdmin implements Initializable {
         }
 
         fichajes.setAll(resultado);
+        tablaFichajes.setItems(fichajes);
         log.info("Busqueda de fichajes: {} registros encontrados", resultado.size());
     }
 
@@ -184,10 +175,7 @@ public class ControladorAdmin implements Initializable {
             GestorAlertas.advertencia("Sin seleccion", "Selecciona un fichaje de la tabla.");
             return;
         }
-        boolean confirmar = GestorAlertas.confirmar(
-                "Eliminar fichaje",
-                "¿Seguro que quieres eliminar este fichaje?\nEsta accion no se puede deshacer."
-        );
+        boolean confirmar = GestorAlertas.confirmar("Eliminar fichaje", "¿Seguro que quieres eliminar este fichaje?\nEsta accion no se puede deshacer.");
         if (!confirmar) return;
 
         boolean ok = servicioFichaje.eliminar(seleccionado.getId());
@@ -218,11 +206,7 @@ public class ControladorAdmin implements Initializable {
             GestorAlertas.advertencia("Sin seleccion", "Selecciona un empleado.");
             return;
         }
-        boolean confirmar = GestorAlertas.confirmar(
-                "Eliminar empleado permanentemente",
-                "¿Seguro que quieres eliminar a " + seleccionado.getNombreCompleto() + "?\n" +
-                        "Se borran tambien TODOS sus fichajes. Esta accion es IRREVERSIBLE."
-        );
+        boolean confirmar = GestorAlertas.confirmar("Eliminar empleado permanentemente", "¿Seguro que quieres eliminar a " + seleccionado.getNombreCompleto() + "?\n" + "Se borran tambien TODOS sus fichajes. Esta accion es IRREVERSIBLE.");
         if (!confirmar) return;
 
         ServicioEmpleado.ResultadoCRUD res = servicioEmpleado.eliminar(seleccionado.getCodEmpleado());
@@ -241,12 +225,12 @@ public class ControladorAdmin implements Initializable {
         actualizarDashboard();
         dpFichajeDesde.setValue(LocalDate.now().withDayOfMonth(1));
         dpFichajeHasta.setValue(LocalDate.now());
-        lblFichadosHoy.setText(String.valueOf(servicioEmpleado.listarActivos().size()));
     }
 
     private void cargarEmpleados() {
         List<Empleado> lista = servicioEmpleado.listarTodos();
         empleados.setAll(lista);
+        tablaEmpleadosAdmin.setItems(empleados);
         cmbFiltroEmpleado.setItems(FXCollections.observableArrayList(lista));
     }
 
@@ -267,34 +251,19 @@ public class ControladorAdmin implements Initializable {
     }
 
     private void configurarTablaFichajes() {
-        colFicFecha.setCellValueFactory(cd -> {
-            LocalDate f = cd.getValue().getFecha();
-            return new SimpleStringProperty(f != null ? f.format(FMT_FECHA) : "");
-        });
-        colFicEmpleado.setCellValueFactory(cd ->
-                new SimpleStringProperty(String.valueOf(cd.getValue().getCodEmpleado())));
-        colFicEntrada.setCellValueFactory(cd -> {
-            LocalTime t = cd.getValue().getEntradaHora();
-            return new SimpleStringProperty(t != null ? t.format(FMT_HORA) : "--:--");
-        });
-        colFicSalida.setCellValueFactory(cd -> {
-            LocalTime t = cd.getValue().getSalidaHora();
-            return new SimpleStringProperty(t != null ? t.format(FMT_HORA) : "--:--");
-        });
-        colFicHoras.setCellValueFactory(cd ->
-                new SimpleStringProperty(cd.getValue().getHorasFormateadas()));
-        colFicEstado.setCellValueFactory(cd ->
-                new SimpleStringProperty(cd.getValue().getEstado()));
+        colFicFecha.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getFecha() != null ? cd.getValue().getFecha().format(FMT_FECHA) : ""));
+        colFicEmpleado.setCellValueFactory(cd -> new SimpleStringProperty(String.valueOf(cd.getValue().getCodEmpleado())));
+        colFicEntrada.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getEntradaHora() != null ? cd.getValue().getEntradaHora().format(FMT_HORA) : "--:--"));
+        colFicSalida.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getSalidaHora() != null ? cd.getValue().getSalidaHora().format(FMT_HORA) : "--:--"));
+        colFicHoras.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getHorasFormateadas()));
+        colFicEstado.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getEstado()));
 
-        // Al seleccionar un fichaje, cargar sus datos en el panel de edicion
-        tablaFichajes.getSelectionModel().selectedItemProperty().addListener(
-                (obs, old, nuevo) -> {
-                    if (nuevo != null) cargarFichajeEnPanel(nuevo);
-                }
-        );
-
+        tablaFichajes.getSelectionModel().selectedItemProperty().addListener((obs, old, nuevo) -> {
+            if (nuevo != null) cargarFichajeEnPanel(nuevo);
+        });
         tablaFichajes.setItems(fichajes);
         tablaFichajes.setPlaceholder(new Label("Usa los filtros y pulsa Buscar."));
+        tablaFichajes.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     }
 
     private void cargarFichajeEnPanel(Fichaje f) {
@@ -306,23 +275,12 @@ public class ControladorAdmin implements Initializable {
     }
 
     private void configurarTablaEmpleados() {
-        colEmpNombre.setCellValueFactory(cd ->
-                new SimpleStringProperty(cd.getValue().getNombreCompleto()));
-        colEmpDni.setCellValueFactory(cd ->
-                new SimpleStringProperty(cd.getValue().getDni()));
-        colEmpRol.setCellValueFactory(cd ->
-                new SimpleStringProperty(cd.getValue().getRol().getEtiqueta()));
-        colEmpEstado.setCellValueFactory(cd -> {
-            Empleado e = cd.getValue();
-            String estado = !e.isActivo() ? "Baja" : e.isBloqueado() ? "Bloqueado" : "Activo";
-            return new SimpleStringProperty(estado);
-        });
-        colEmpUltimoAcceso.setCellValueFactory(cd -> {
-            var ua = cd.getValue().getUltimoAcceso();
-            return new SimpleStringProperty(ua != null ? ua.toLocalDate().format(FMT_FECHA) : "Nunca");
-        });
+        colEmpNombre.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getNombreCompleto()));
+        colEmpDni.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getDni()));
+        colEmpRol.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getRol().getEtiqueta()));
+        colEmpEstado.setCellValueFactory(cd -> new SimpleStringProperty(!cd.getValue().isActivo() ? "Baja" : cd.getValue().isBloqueado() ? "Bloqueado" : "Activo"));
+        colEmpUltimoAcceso.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getUltimoAcceso() != null ? cd.getValue().getUltimoAcceso().toLocalDate().format(FMT_FECHA) : "Nunca"));
 
-        // Colorear filas segun estado
         tablaEmpleadosAdmin.setRowFactory(tv -> new TableRow<>() {
             @Override
             protected void updateItem(Empleado e, boolean empty) {
@@ -333,18 +291,8 @@ public class ControladorAdmin implements Initializable {
                 else setStyle("");
             }
         });
-
-        // Filtro de busqueda por nombre o DNI
-        empleadosFiltrados = new FilteredList<>(empleados, emp -> true);
-        txtBuscarAdmin.textProperty().addListener((obs, old, texto) ->
-                empleadosFiltrados.setPredicate(e -> {
-                    if (texto == null || texto.isBlank()) return true;
-                    String f = texto.toLowerCase();
-                    return e.getNombreCompleto().toLowerCase().contains(f)
-                            || e.getDni().toLowerCase().contains(f);
-                })
-        );
-        tablaEmpleadosAdmin.setItems(empleadosFiltrados);
+        tablaEmpleadosAdmin.setItems(empleados);
         tablaEmpleadosAdmin.setPlaceholder(new Label("No hay empleados."));
+        tablaEmpleadosAdmin.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     }
 }

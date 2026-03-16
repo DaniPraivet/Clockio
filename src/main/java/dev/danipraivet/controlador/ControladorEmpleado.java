@@ -1,16 +1,18 @@
 package dev.danipraivet.controlador;
 
-import dev.danipraivet.vista.Aplicacion;
 import dev.danipraivet.modelo.entidades.Fichaje;
 import dev.danipraivet.modelo.servicio.ServicioAutenticacion;
 import dev.danipraivet.modelo.servicio.ServicioFichaje;
 import dev.danipraivet.modelo.utilidades.GestorSesion;
+import dev.danipraivet.vista.Aplicacion;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,15 +24,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-// Controlador de la vista Empleado.fxml.
-// Muestra el estado de fichaje del dia y el historial del mes actual.
 public class ControladorEmpleado implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(ControladorEmpleado.class);
 
     private static final DateTimeFormatter FMT_HORA = DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter FMT_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+    private final ServicioFichaje servicioFichaje = new ServicioFichaje();
+    private final ServicioAutenticacion servicioAuth = new ServicioAutenticacion();
+    private final ObservableList<Fichaje> fichajes = FXCollections.observableArrayList();
     @FXML
     private Label lblBienvenida;
     @FXML
@@ -38,8 +40,7 @@ public class ControladorEmpleado implements Initializable {
     @FXML
     private Label lblEstadoFichaje;
     @FXML
-    private Button btnFichar;
-
+    private MFXButton btnFichar;
     @FXML
     private TableView<Fichaje> tablaHistorial;
     @FXML
@@ -54,19 +55,13 @@ public class ControladorEmpleado implements Initializable {
     private TableColumn<Fichaje, String> colHoras;
     @FXML
     private TableColumn<Fichaje, String> colEstado;
-
     @FXML
     private Label lblTotalHorasMes;
-
-    private final ServicioFichaje servicioFichaje = new ServicioFichaje();
-    private final ServicioAutenticacion servicioAuth = new ServicioAutenticacion();
-
-    private final ObservableList<Fichaje> fichajes = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarTabla();
-        actualizarVista();
+        Platform.runLater(this::actualizarVista);
     }
 
     @FXML
@@ -83,7 +78,7 @@ public class ControladorEmpleado implements Initializable {
         Aplicacion.navegarA("Login");
     }
 
-    // Refresca todos los componentes de la vista con el estado actual del empleado.
+    // Refresca todos los componentes de la vista con el estado actual del empleado
     private void actualizarVista() {
         lblBienvenida.setText("Bienvenido, " + GestorSesion.getNombreCompleto());
         lblFechaHora.setText(LocalDate.now().format(FMT_FECHA));
@@ -106,7 +101,7 @@ public class ControladorEmpleado implements Initializable {
             });
         } else {
             btnFichar.setText("Entrada");
-            btnFichar.setStyle("-fx-background-color: #43a047; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+            btnFichar.setStyle("-fx-background-color: #43a047; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-cursor: hand;");
             lblEstadoFichaje.setText("No estas fichado hoy.");
             lblEstadoFichaje.setTextFill(Color.web("#757575"));
         }
@@ -115,16 +110,12 @@ public class ControladorEmpleado implements Initializable {
     private void cargarHistorial() {
         List<Fichaje> lista = servicioFichaje.getMesActual();
         fichajes.setAll(lista);
-
-        double totalHoras = lista.stream()
-                .filter(f -> f.getHorasTrabajadas() != null)
-                .mapToDouble(f -> f.getHorasTrabajadas().doubleValue())
-                .sum();
+        double totalHoras = lista.stream().filter(f -> f.getHorasTrabajadas() != null).mapToDouble(f -> f.getHorasTrabajadas().doubleValue()).sum();
         lblTotalHorasMes.setText(String.format("Total mes: %.1f h", totalHoras));
     }
 
     private void configurarTabla() {
-        colFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+        colFecha.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("fecha"));
         colFecha.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(LocalDate item, boolean empty) {
@@ -132,34 +123,12 @@ public class ControladorEmpleado implements Initializable {
                 setText(empty || item == null ? null : item.format(FMT_FECHA));
             }
         });
+        colEntrada.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getEntradaHora() != null ? cd.getValue().getEntradaHora().format(FMT_HORA) : "--:--"));
+        colSalida.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getSalidaHora() != null ? cd.getValue().getSalidaHora().format(FMT_HORA) : "--:--"));
+        colTurno.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTurnoEntrada() != null ? cd.getValue().getTurnoEntrada().getEtiqueta() : ""));
+        colHoras.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getHorasFormateadas()));
+        colEstado.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getEstado()));
 
-        colEntrada.setCellValueFactory(cellData -> {
-            Fichaje f = cellData.getValue();
-            String texto = f.getEntradaHora() != null ? f.getEntradaHora().format(FMT_HORA) : "--:--";
-            return new javafx.beans.property.SimpleStringProperty(texto);
-        });
-
-        colSalida.setCellValueFactory(cellData -> {
-            Fichaje f = cellData.getValue();
-            String texto = f.getSalidaHora() != null ? f.getSalidaHora().format(FMT_HORA) : "--:--";
-            return new javafx.beans.property.SimpleStringProperty(texto);
-        });
-
-        colTurno.setCellValueFactory(cellData -> {
-            Fichaje f = cellData.getValue();
-            String turno = f.getTurnoEntrada() != null ? f.getTurnoEntrada().getEtiqueta() : "";
-            return new javafx.beans.property.SimpleStringProperty(turno);
-        });
-
-        colHoras.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getHorasFormateadas())
-        );
-
-        colEstado.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getEstado())
-        );
-
-        // Colorear fila segun estado del fichaje
         tablaHistorial.setRowFactory(tv -> new TableRow<>() {
             @Override
             protected void updateItem(Fichaje f, boolean empty) {
@@ -170,9 +139,8 @@ public class ControladorEmpleado implements Initializable {
                 else setStyle("");
             }
         });
-
         tablaHistorial.setItems(fichajes);
-        tablaHistorial.setPlaceholder(new Label("No hay fichajes registrados este mes."));
+        tablaHistorial.setPlaceholder(new Label("No hay fichajes este mes."));
     }
 
     private void mostrarAlertaFichaje(String mensaje) {

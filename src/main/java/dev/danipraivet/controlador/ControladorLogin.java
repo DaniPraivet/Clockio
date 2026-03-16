@@ -1,15 +1,15 @@
 package dev.danipraivet.controlador;
 
-import dev.danipraivet.vista.Aplicacion;
 import dev.danipraivet.modelo.enumeraciones.Rol;
 import dev.danipraivet.modelo.servicio.ServicioAutenticacion;
 import dev.danipraivet.modelo.utilidades.GestorSesion;
+import dev.danipraivet.vista.Aplicacion;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import org.slf4j.Logger;
@@ -18,22 +18,18 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-// Controlador de la vista Login.fxml.
-// Recibe credenciales, delega la autenticacion a ServicioAutenticacion y navega segun el rol.
 public class ControladorLogin implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(ControladorLogin.class);
-
+    private final ServicioAutenticacion servicioAuth = new ServicioAutenticacion();
     @FXML
     private TextField txtUsername;
     @FXML
-    private PasswordField txtContrasena;
+    private MFXPasswordField txtContrasena;
     @FXML
-    private Button btnLogin;
+    private MFXButton btnLogin;
     @FXML
     private Label lblError;
-
-    private final ServicioAutenticacion servicioAuth = new ServicioAutenticacion();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

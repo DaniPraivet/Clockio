@@ -1,184 +1,179 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<!-- Vista: RRHH -->
 <BorderPane
-        xmlns="http://javafx.com/javafx/21"
         xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/21"
         fx:controller="dev.danipraivet.controlador.ControladorRRHH"
-        style="-fx-background-color: #F5F5F5;">
+        style="-fx-background-color: #E8F5E9;">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="16"
-              style="-fx-background-color: #2E7D32; -fx-padding: 12 24;">
-            <Label text="Control de Asistencia - RRHH"
-                   style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+              style="-fx-background-color: #1b5e20;
+                     -fx-padding: 14 28;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);">
+            <Label text="Clockio · Recursos Humanos"
+                   style="-fx-text-fill: white; -fx-font-size: 17px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="lblBienvenidaRRHH"
-                   style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 13px;"/>
-            <Button text="Cerrar sesion" onAction="#onLogout"
-                    style="-fx-background-color: rgba(255,255,255,0.15);
-                           -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 4;"/>
+                   style="-fx-text-fill: rgba(255,255,255,0.75); -fx-font-size: 13px;"/>
+            <MFXButton text="Cerrar sesión" onAction="#onLogout"
+                       style="-fx-background-color: rgba(255,255,255,0.18);
+                              -fx-text-fill: white; -fx-background-radius: 8;
+                              -fx-cursor: hand; -fx-font-size: 13px;"/>
         </HBox>
     </top>
 
     <center>
-        <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-padding: 8;">
+        <TabPane tabClosingPolicy="UNAVAILABLE"
+                 style="-fx-padding: 10; -fx-tab-min-height: 38px; -fx-tab-min-width: 100px;">
 
-            <!-- Pestaña 1: Inicio -->
             <Tab text="Inicio">
-                <VBox alignment="CENTER" spacing="24" style="-fx-padding: 40;">
-                    <VBox alignment="CENTER" spacing="12"
-                          style="-fx-background-color: white; -fx-background-radius: 12;
-                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
-                                 -fx-padding: 40; -fx-max-width: 400;">
-                        <Label text="Mi fichaje"
-                               style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
-                        <Label fx:id="lblEstadoRRHH"
-                               text=""
-                               style="-fx-font-size: 14px; -fx-text-fill: #757575;"/>
-                        <Button fx:id="btnFicharRRHH"
-                                text="Entrada"
-                                onAction="#onFicharRRHH"
-                                style="-fx-background-color: #43a047; -fx-text-fill: white;
-                                       -fx-font-size: 16px; -fx-font-weight: bold;
-                                       -fx-background-radius: 8; -fx-pref-width: 200px;
-                                       -fx-pref-height: 50px; -fx-cursor: hand;"/>
-                    </VBox>
+                <VBox spacing="20" style="-fx-padding: 28;">
+                    <HBox spacing="20">
+                        <VBox alignment="CENTER" spacing="18" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: white; -fx-background-radius: 16;
+                             -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.14), 16, 0, 0, 5);
+                             -fx-padding: 36 32;">
+                            <Label fx:id="lblEstadoRRHH" text="Cargando estado..."
+                                   style="-fx-font-size: 15px; -fx-text-fill: #607d8b;"/>
+                            <MFXButton fx:id="btnFicharRRHH"
+                                       text="Entrada"
+                                       onAction="#onFicharRRHH"
+                                       prefWidth="240" prefHeight="56"
+                                       style="-fx-background-color: #2e7d32;
+                                      -fx-text-fill: white;
+                                      -fx-font-size: 17px; -fx-font-weight: bold;
+                                      -fx-background-radius: 12; -fx-cursor: hand;"/>
+                        </VBox>
+                    </HBox>
                 </VBox>
             </Tab>
 
-            <!-- Pestaña 2: Gestion de Empleados -->
             <Tab text="Empleados">
                 <HBox spacing="16" style="-fx-padding: 16;">
 
-                    <!-- Tabla -->
-                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                    <VBox spacing="12" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                         <HBox spacing="10" alignment="CENTER_LEFT">
-                            <TextField fx:id="txtBuscar"
-                                       promptText="Buscar por nombre, DNI o usuario..."
-                                       prefWidth="300" style="-fx-pref-height: 34px;"/>
+                            <MFXTextField fx:id="txtBuscar"
+                                          floatingText="Buscar por nombre, DNI o usuario..."
+                                          prefWidth="340" prefHeight="44"/>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Button text="Nuevo empleado" onAction="#onNuevo"
-                                    fx:id="btnNuevo"
-                                    style="-fx-background-color: #1565C0; -fx-text-fill: white;
-                                           -fx-background-radius: 4; -fx-cursor: hand;"/>
+                            <MFXButton fx:id="btnNuevo"
+                                       text="+ Nuevo empleado" onAction="#onNuevo"
+                                       style="-fx-background-color: #1b5e20; -fx-text-fill: white;
+                                              -fx-background-radius: 8; -fx-cursor: hand;
+                                              -fx-font-weight: bold; -fx-padding: 10 16;"/>
                         </HBox>
-
-                        <TableView fx:id="tablaEmpleados" VBox.vgrow="ALWAYS" prefHeight="500">
+                        <TableView fx:id="tablaEmpleados" VBox.vgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity">
                             <columns>
-                                <TableColumn fx:id="colCod"    text="Cod."   prefWidth="60"/>
+                                <TableColumn fx:id="colCod" text="Cód." prefWidth="60"/>
                                 <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
-                                <TableColumn fx:id="colDni"    text="DNI"    prefWidth="100"/>
-                                <TableColumn fx:id="colRol"    text="Rol"    prefWidth="110"/>
-                                <TableColumn fx:id="colDep"    text="Depto." prefWidth="130"/>
+                                <TableColumn fx:id="colDni" text="DNI" prefWidth="100"/>
+                                <TableColumn fx:id="colRol" text="Rol" prefWidth="120"/>
+                                <TableColumn fx:id="colDep" text="Depto." prefWidth="130"/>
                                 <TableColumn fx:id="colEstado" text="Estado" prefWidth="80"/>
                             </columns>
                         </TableView>
                     </VBox>
 
-                    <!-- Formulario lateral -->
-                    <VBox spacing="10" prefWidth="300" minWidth="260"
-                          style="-fx-background-color: white; -fx-background-radius: 10;
-                                 -fx-padding: 16;
-                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                    <VBox spacing="9" prefWidth="295" minWidth="265"
+                          style="-fx-background-color: white; -fx-background-radius: 16;
+                                 -fx-padding: 22 18;
+                                 -fx-effect: dropshadow(gaussian, rgba(27,94,32,0.14), 14, 0, 0, 4);">
 
                         <Label text="Ficha de empleado"
-                               style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+                               style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #1b5e20;"/>
                         <Separator/>
 
-                        <Label text="Codigo *"    style="-fx-font-size: 12px;"/>
-                        <TextField fx:id="txtFormCod" promptText="Ej: 1006"/>
+                        <MFXTextField fx:id="txtFormCod" floatingText="Código *" maxWidth="Infinity"/>
+                        <MFXTextField fx:id="txtFormNombre" floatingText="Nombre *" maxWidth="Infinity"/>
+                        <MFXTextField fx:id="txtFormApellido1" floatingText="Apellido 1 *" maxWidth="Infinity"/>
+                        <MFXTextField fx:id="txtFormApellido2" floatingText="Apellido 2" maxWidth="Infinity"/>
+                        <MFXTextField fx:id="txtFormDni" floatingText="DNI *" maxWidth="Infinity"/>
+                        <MFXTextField fx:id="txtFormEmail" floatingText="Email" maxWidth="Infinity"/>
+                        <MFXTextField fx:id="txtFormTelefono" floatingText="Teléfono" maxWidth="Infinity"/>
+                        <MFXTextField fx:id="txtFormUsername" floatingText="Username *" maxWidth="Infinity"/>
+                        <MFXPasswordField fx:id="txtFormContrasena" floatingText="Contraseña *" maxWidth="Infinity"/>
 
-                        <Label text="Nombre *"    style="-fx-font-size: 12px;"/>
-                        <TextField fx:id="txtFormNombre" promptText="Nombre"/>
-
-                        <Label text="Apellido 1 *" style="-fx-font-size: 12px;"/>
-                        <TextField fx:id="txtFormApellido1" promptText="Primer apellido"/>
-
-                        <Label text="Apellido 2"  style="-fx-font-size: 12px;"/>
-                        <TextField fx:id="txtFormApellido2" promptText="Segundo apellido (opcional)"/>
-
-                        <Label text="DNI *"       style="-fx-font-size: 12px;"/>
-                        <TextField fx:id="txtFormDni" promptText="Ej: 12345678A"/>
-
-                        <Label text="Email"       style="-fx-font-size: 12px;"/>
-                        <TextField fx:id="txtFormEmail" promptText="correo@empresa.com"/>
-
-                        <Label text="Telefono"    style="-fx-font-size: 12px;"/>
-                        <TextField fx:id="txtFormTelefono" promptText="6XXXXXXXX"/>
-
-                        <Label text="Username *"  style="-fx-font-size: 12px;"/>
-                        <TextField fx:id="txtFormUsername" promptText="Ej: jrodriguez"/>
-
-                        <Label text="Contrasena *" style="-fx-font-size: 12px;"/>
-                        <PasswordField fx:id="txtFormContrasena" promptText="Min. 8 chars"/>
-
-                        <Label text="Rol"         style="-fx-font-size: 12px;"/>
-                        <ComboBox fx:id="cmbFormRol" maxWidth="Infinity"/>
+                        <Label text="Rol" style="-fx-font-size: 12px; -fx-text-fill: #78909c;"/>
+                        <MFXComboBox fx:id="cmbFormRol" maxWidth="Infinity" prefHeight="40"/>
 
                         <Label fx:id="lblFormMensaje" text="" wrapText="true"
                                style="-fx-font-size: 12px;" visible="false"/>
 
                         <Separator/>
+
                         <HBox spacing="8">
-                            <Button fx:id="btnGuardar" text="Guardar"
-                                    onAction="#onGuardar" HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                    style="-fx-background-color: #1565C0; -fx-text-fill: white;
-                                           -fx-cursor: hand; -fx-background-radius: 4;"/>
-                            <Button fx:id="btnBaja" text="Dar de baja"
-                                    onAction="#onDarDeBaja" HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                    style="-fx-background-color: #e53935; -fx-text-fill: white;
-                                           -fx-cursor: hand; -fx-background-radius: 4;"/>
+                            <MFXButton fx:id="btnGuardar" text="Guardar"
+                                       onAction="#onGuardar"
+                                       HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                       style="-fx-background-color: #1b5e20; -fx-text-fill: white;
+                                              -fx-cursor: hand; -fx-background-radius: 8;
+                                              -fx-font-weight: bold; -fx-padding: 10;"/>
+                            <MFXButton fx:id="btnBaja" text="Dar de baja"
+                                       onAction="#onDarDeBaja"
+                                       HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                       style="-fx-background-color: #b71c1c; -fx-text-fill: white;
+                                              -fx-cursor: hand; -fx-background-radius: 8;
+                                              -fx-padding: 10;"/>
                         </HBox>
                     </VBox>
                 </HBox>
             </Tab>
 
-            <!-- Pestaña 3: Informes -->
             <Tab text="Informes">
-                <VBox spacing="20" style="-fx-padding: 32; -fx-max-width: 600;">
-                    <Label text="Generar informe de asistencia"
-                           style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
-                    <VBox spacing="12"
-                          style="-fx-background-color: white; -fx-background-radius: 10;
-                                 -fx-padding: 24;
-                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                <BorderPane>
+                    <center>
+                        <VBox spacing="24" style="-fx-padding: 36;" maxWidth="660" alignment="CENTER">
+                            <Label text="Generar informe de asistencia"
+                                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1b5e20;"/>
 
-                        <Label text="Empleado (vacio = todos):" style="-fx-font-weight: bold;"/>
-                        <ComboBox fx:id="cmbEmpleadoInforme" maxWidth="Infinity"
-                                  promptText="Todos los empleados"/>
+                            <VBox spacing="18"
+                                  style="-fx-background-color: white; -fx-background-radius: 16;
+                                 -fx-padding: 30;
+                                 -fx-effect: dropshadow(gaussian, rgba(27,94,32,0.14), 14, 0, 0, 4);">
 
-                        <HBox spacing="16" alignment="CENTER_LEFT">
-                            <VBox spacing="4" HBox.hgrow="ALWAYS">
-                                <Label text="Desde:" style="-fx-font-weight: bold;"/>
-                                <DatePicker fx:id="dpDesde" maxWidth="Infinity"/>
+                                <Label text="Empleado (vacío = todos):"
+                                       style="-fx-font-weight: bold; -fx-text-fill: #37474f;"/>
+                                <MFXComboBox fx:id="cmbEmpleadoInforme"
+                                             maxWidth="Infinity" prefHeight="44"
+                                             promptText="Todos los empleados"/>
+
+                                <HBox spacing="20">
+                                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                        <Label text="Desde:" style="-fx-font-weight: bold; -fx-text-fill: #37474f;"/>
+                                        <MFXDatePicker fx:id="dpDesde" maxWidth="Infinity"/>
+                                    </VBox>
+                                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                        <Label text="Hasta:" style="-fx-font-weight: bold; -fx-text-fill: #37474f;"/>
+                                        <MFXDatePicker fx:id="dpHasta" maxWidth="Infinity"/>
+                                    </VBox>
+                                </HBox>
+
+                                <Separator/>
+
+                                <HBox spacing="14">
+                                    <MFXButton fx:id="btnGenerarPdf"
+                                               text="Exportar PDF" onAction="#onGenerarPdf"
+                                               HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="48"
+                                               style="-fx-background-color: #b71c1c; -fx-text-fill: white;
+                                              -fx-font-size: 14px; -fx-font-weight: bold;
+                                              -fx-background-radius: 10; -fx-cursor: hand;"/>
+                                    <MFXButton fx:id="btnGenerarExcel"
+                                               text="Exportar Excel" onAction="#onGenerarExcel"
+                                               HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="48"
+                                               style="-fx-background-color: #1b5e20; -fx-text-fill: white;
+                                              -fx-font-size: 14px; -fx-font-weight: bold;
+                                              -fx-background-radius: 10; -fx-cursor: hand;"/>
+                                </HBox>
                             </VBox>
-                            <VBox spacing="4" HBox.hgrow="ALWAYS">
-                                <Label text="Hasta:" style="-fx-font-weight: bold;"/>
-                                <DatePicker fx:id="dpHasta" maxWidth="Infinity"/>
-                            </VBox>
-                        </HBox>
-
-                        <Separator/>
-                        <HBox spacing="12">
-                            <Button fx:id="btnGenerarPdf" text="Exportar PDF"
-                                    onAction="#onGenerarPdf" HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                    prefHeight="44"
-                                    style="-fx-background-color: #c62828; -fx-text-fill: white;
-                                           -fx-font-size: 14px; -fx-background-radius: 6; -fx-cursor: hand;"/>
-                            <Button fx:id="btnGenerarExcel" text="Exportar Excel"
-                                    onAction="#onGenerarExcel" HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                    prefHeight="44"
-                                    style="-fx-background-color: #2e7d32; -fx-text-fill: white;
-                                           -fx-font-size: 14px; -fx-background-radius: 6; -fx-cursor: hand;"/>
-                        </HBox>
-                    </VBox>
-                </VBox>
+                        </VBox>
+                    </center>
+                </BorderPane>
             </Tab>
-
         </TabPane>
     </center>
 </BorderPane>

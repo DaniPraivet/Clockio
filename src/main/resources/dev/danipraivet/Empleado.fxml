@@ -1,82 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<!-- Vista: Empleado -->
 <BorderPane
-        xmlns="http://javafx.com/javafx/21"
         xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/21"
         fx:controller="dev.danipraivet.controlador.ControladorEmpleado"
-        style="-fx-background-color: #F5F5F5;">
+        style="-fx-background-color: #E8EAF6;">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="16"
-              style="-fx-background-color: #1565C0; -fx-padding: 12 24;">
-            <Label text="Control de Asistencia"
-                   style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+              style="-fx-background-color: #1565C0;
+                     -fx-padding: 14 28;
+                     -fx-effect: dropshadow(gaussian, rgba(21,101,192,0.4), 10, 0, 0, 4);">
+            <Label text="Clockio · Control de Asistencia"
+                   style="-fx-text-fill: white; -fx-font-size: 17px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="lblFechaHora"
-                   style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 13px;"/>
-            <Button text="Cerrar sesion" onAction="#onLogout"
-                    style="-fx-background-color: rgba(255,255,255,0.15);
-                           -fx-text-fill: white; -fx-cursor: hand;
-                           -fx-background-radius: 4;"/>
+                   style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 13px;"/>
+            <MFXButton text="Cerrar sesión" onAction="#onLogout"
+                       style="-fx-background-color: rgba(255,255,255,0.18);
+                              -fx-text-fill: white; -fx-background-radius: 8;
+                              -fx-cursor: hand; -fx-font-size: 13px;"/>
         </HBox>
     </top>
+
 
     <center>
         <VBox spacing="20" style="-fx-padding: 28;">
 
-            <Label fx:id="lblBienvenida"
-                   text="Bienvenido"
-                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #212121;"/>
+            <Label fx:id="lblBienvenida" text="Bienvenido"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1a237e;"/>
 
-            <!-- Tarjeta de fichaje -->
-            <VBox alignment="CENTER" spacing="16"
-                  style="-fx-background-color: white; -fx-background-radius: 12;
-                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
-                         -fx-padding: 32;">
+            <HBox spacing="20">
+                <VBox alignment="CENTER" spacing="18" HBox.hgrow="ALWAYS"
+                      style="-fx-background-color: white; -fx-background-radius: 16;
+                             -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.14), 16, 0, 0, 5);
+                             -fx-padding: 36 32;">
+                    <Label fx:id="lblEstadoFichaje" text="Cargando estado..."
+                           style="-fx-font-size: 15px; -fx-text-fill: #607d8b;"/>
+                    <MFXButton fx:id="btnFichar"
+                               text="Entrada"
+                               onAction="#onFichar"
+                               prefWidth="240" prefHeight="56"
+                               style="-fx-cursor: hand;
+                                      -fx-background-color: #2e7d32;
+                                      -fx-text-fill: white;
+                                      -fx-font-size: 17px; -fx-font-weight: bold;
+                                      -fx-background-radius: 12;"/>
+                </VBox>
 
-                <Label fx:id="lblEstadoFichaje"
-                       text="Cargando estado..."
-                       style="-fx-font-size: 16px; -fx-text-fill: #757575;"/>
+                <VBox alignment="CENTER" spacing="6"
+                      style="-fx-background-color: white; -fx-background-radius: 16;
+                             -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.14), 16, 0, 0, 5);
+                             -fx-padding: 28 32;
+                             -fx-border-color: transparent transparent transparent #3f51b5;
+                             -fx-border-width: 0 0 0 4; -fx-border-radius: 0 16 16 0;">
+                    <Label fx:id="lblTotalHorasMes" text="0 h"
+                           style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #3f51b5;"/>
+                    <Label text="Horas este mes"
+                           style="-fx-text-fill: #90a4ae; -fx-font-size: 13px;"/>
+                </VBox>
+            </HBox>
 
-                <Button fx:id="btnFichar"
-                        text="Entrada"
-                        onAction="#onFichar"
-                        style="-fx-background-color: #43a047; -fx-text-fill: white;
-                               -fx-font-size: 18px; -fx-font-weight: bold;
-                               -fx-background-radius: 8; -fx-pref-width: 220px;
-                               -fx-pref-height: 56px; -fx-cursor: hand;"/>
-            </VBox>
-
-            <!-- Historial del mes -->
-            <VBox spacing="8"
-                  style="-fx-background-color: white; -fx-background-radius: 12;
-                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
-                         -fx-padding: 20;" VBox.vgrow="ALWAYS">
-
-                <Label text="Mi historial - mes actual"
-                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #212121;"/>
-
-                <TableView fx:id="tablaHistorial" prefHeight="320" maxWidth="Infinity"
-                           VBox.vgrow="ALWAYS">
+            <VBox spacing="10" VBox.vgrow="ALWAYS"
+                  style="-fx-background-color: white; -fx-background-radius: 16;
+                         -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.14), 16, 0, 0, 5);
+                         -fx-padding: 20 18 16 18;">
+                <Label text="Mi historial · mes actual"
+                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1a237e;"/>
+                <TableView fx:id="tablaHistorial" VBox.vgrow="ALWAYS" prefHeight="300" maxWidth="Infinity">
                     <columns>
-                        <TableColumn fx:id="colFecha"   text="Fecha"   prefWidth="110"/>
-                        <TableColumn fx:id="colEntrada" text="Entrada" prefWidth="80"/>
-                        <TableColumn fx:id="colSalida"  text="Salida"  prefWidth="80"/>
-                        <TableColumn fx:id="colTurno"   text="Turno"   prefWidth="90"/>
-                        <TableColumn fx:id="colHoras"   text="Horas"   prefWidth="90"/>
-                        <TableColumn fx:id="colEstado"  text="Estado"  prefWidth="120"/>
+                        <TableColumn fx:id="colFecha" text="Fecha" prefWidth="115"/>
+                        <TableColumn fx:id="colEntrada" text="Entrada" prefWidth="85"/>
+                        <TableColumn fx:id="colSalida" text="Salida" prefWidth="85"/>
+                        <TableColumn fx:id="colTurno" text="Turno" prefWidth="90"/>
+                        <TableColumn fx:id="colHoras" text="Horas" prefWidth="90"/>
+                        <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/>
                     </columns>
                 </TableView>
-
-                <HBox alignment="CENTER_RIGHT">
-                    <Label fx:id="lblTotalHorasMes"
-                           text="Total mes: 0 h"
-                           style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1565C0;"/>
-                </HBox>
             </VBox>
         </VBox>
     </center>
