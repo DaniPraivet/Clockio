@@ -72,7 +72,7 @@ public class ServicioInformes {
                     .setWidth(UnitValue.createPercentValue(100));
 
             // Logo
-            URL logoUrl = getClass().getResource("/dev/danipraivet/logo/logo.png");
+            URL logoUrl = getClass().getResource("/dev/danipraivet/logo/logo_negro.png");
             if (logoUrl != null) {
                 Image logo = new Image(ImageDataFactory.create(logoUrl))
                         .setHeight(50).setAutoScale(false);
@@ -89,7 +89,7 @@ public class ServicioInformes {
                     .setFontColor(COLOR_CABECERA)
                     .setTextAlignment(TextAlignment.RIGHT);
             Paragraph subtitulo = new Paragraph(
-                    "Período: " + desde.format(FMT_FECHA) + " — " + hasta.format(FMT_FECHA))
+                    "Período: " + desde.format(FMT_FECHA) + " - " + hasta.format(FMT_FECHA))
                     .setFontSize(10).setFontColor(ColorConstants.GRAY)
                     .setTextAlignment(TextAlignment.RIGHT);
             cabecera.addCell(new Cell()
@@ -112,7 +112,7 @@ public class ServicioInformes {
                 infoEmp.addCell(celda(empleado.getDni(), false));
                 infoEmp.addCell(celda("Departamento:", true));
                 infoEmp.addCell(celda(empleado.getDepartamento() != null
-                        ? empleado.getDepartamento().getNombre() : "—", false));
+                        ? empleado.getDepartamento().getNombre() : "-", false));
 
                 document.add(infoEmp);
             }
@@ -144,7 +144,7 @@ public class ServicioInformes {
 
                 BigDecimal extras = f.getHorasExtras();
                 tabla.addCell(fila(extras != null && extras.compareTo(BigDecimal.ZERO) > 0
-                        ? extras + "h" : "—", colorFila, true));
+                        ? extras + "h" : "-", colorFila, true));
                 tabla.addCell(fila(f.getEstado(), colorFila, true));
 
                 if (f.getHorasTrabajadas() != null) totalHoras  += f.getHorasTrabajadas().doubleValue();
@@ -162,7 +162,7 @@ public class ServicioInformes {
             document.add(resumen);
 
             // Pie de página
-            Paragraph pie = new Paragraph("Clockio — Sistema de Control de Asistencia   |   " +
+            Paragraph pie = new Paragraph("Clockio - Sistema de Control de Asistencia   |   " +
                     "Generado el " + LocalDate.now().format(FMT_FECHA))
                     .setFontSize(8).setFontColor(ColorConstants.GRAY)
                     .setTextAlignment(TextAlignment.CENTER).setMarginTop(24);
@@ -229,13 +229,13 @@ public class ServicioInformes {
             // Titulo
             Row rowTitulo = sheet.createRow(fila++);
             org.apache.poi.ss.usermodel.Cell celdaTitulo = rowTitulo.createCell(0);
-            celdaTitulo.setCellValue("INFORME DE ASISTENCIA — Clockio");
+            celdaTitulo.setCellValue("INFORME DE ASISTENCIA - Clockio");
             celdaTitulo.setCellStyle(estiloTitulo);
             sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
 
             Row rowPeriodo = sheet.createRow(fila++);
             rowPeriodo.createCell(0).setCellValue(
-                    "Período: " + desde.format(FMT_FECHA) + " — " + hasta.format(FMT_FECHA));
+                    "Período: " + desde.format(FMT_FECHA) + " - " + hasta.format(FMT_FECHA));
             sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 5));
 
             // Datos del empleado
@@ -286,7 +286,7 @@ public class ServicioInformes {
 
                 BigDecimal extras = f.getHorasExtras();
                 setValue(row, 4, extras != null && extras.compareTo(BigDecimal.ZERO) > 0
-                        ? extras + "h" : "—", estilo);
+                        ? extras + "h" : "-", estilo);
                 setValue(row, 5, f.getEstado(), estilo);
 
                 if (f.getHorasTrabajadas() != null) totalHoras  += f.getHorasTrabajadas().doubleValue();

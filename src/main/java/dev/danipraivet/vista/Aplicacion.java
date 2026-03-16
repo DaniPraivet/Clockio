@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ public class Aplicacion extends Application {
         escenarioPrincipal.setTitle("Control de Asistencia");
         escenarioPrincipal.setMinWidth(900);
         escenarioPrincipal.setMinHeight(600);
+        escenarioPrincipal.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/dev/danipraivet/logo/logo_negro_app.png"))));
 
         if (!GestorConexiones.testConexion()) {
             log.error("No se pudo conectar a la base de datos. Comprueba la configuracion.");

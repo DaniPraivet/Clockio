@@ -241,6 +241,7 @@ public class ControladorAdmin implements Initializable {
         actualizarDashboard();
         dpFichajeDesde.setValue(LocalDate.now().withDayOfMonth(1));
         dpFichajeHasta.setValue(LocalDate.now());
+        lblFichadosHoy.setText(String.valueOf(servicioEmpleado.listarActivos().size()));
     }
 
     private void cargarEmpleados() {
