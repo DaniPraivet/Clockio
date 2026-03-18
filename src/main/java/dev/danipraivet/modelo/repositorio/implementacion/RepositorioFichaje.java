@@ -19,57 +19,21 @@ import java.util.Optional;
 public class RepositorioFichaje implements IRepositorioFichaje {
 
     private static final Logger log = LoggerFactory.getLogger(RepositorioFichaje.class);
-
-    private final Rol rolConexion;
-
-    public RepositorioFichaje(Rol rolConexion) {
-        this.rolConexion = rolConexion;
-    }
-
-    private static final String SQL_BASE =
-            "SELECT d.id, d.fecha, d.cod_empleado, " +
-                    "       d.entrada_hora, d.salida_hora, " +
-                    "       d.turno_entrada, d.turno_salida, " +
-                    "       d.horas_trabajadas, d.horas_extras, " +
-                    "       d.festivo, d.justificado, d.observaciones, " +
-                    "       d.creado_en, d.modificado_en " +
-                    "FROM dias d ";
-
-    private static final String SQL_HOY =
-            SQL_BASE + "WHERE d.cod_empleado=? AND d.fecha=CURRENT_DATE LIMIT 1";
-
-    private static final String SQL_POR_EMPLEADO_RANGO =
-            SQL_BASE + "WHERE d.cod_empleado=? AND d.fecha BETWEEN ? AND ? ORDER BY d.fecha DESC";
-
-    private static final String SQL_POR_FECHA =
-            SQL_BASE + "WHERE d.fecha=? ORDER BY d.entrada_hora";
-
-    private static final String SQL_TODOS_CON_EMPLEADO =
-            "SELECT d.id, d.fecha, d.cod_empleado, " +
-                    "       CONCAT(e.nombre,' ',e.apellido1) AS nombre_completo, " +
-                    "       e.rol, " +
-                    "       d.entrada_hora, d.salida_hora, " +
-                    "       d.turno_entrada, d.turno_salida, " +
-                    "       d.horas_trabajadas, d.horas_extras, " +
-                    "       d.festivo, d.justificado, d.observaciones, " +
-                    "       d.creado_en, d.modificado_en " +
-                    "FROM dias d " +
-                    "JOIN empleados e ON d.cod_empleado = e.cod_empleado " +
-                    "WHERE d.fecha BETWEEN ? AND ? ORDER BY d.fecha DESC, e.apellido1";
-
-    private static final String SQL_ACTUALIZAR =
-            "UPDATE dias SET entrada_hora=?, salida_hora=?, turno_entrada=?, turno_salida=?, " +
-                    "horas_trabajadas=?, horas_extras=?, festivo=?, justificado=?, observaciones=? " +
-                    "WHERE id=?";
-
+    private static final String SQL_BASE = "SELECT d.id, d.fecha, d.cod_empleado, " + "       d.entrada_hora, d.salida_hora, " + "       d.turno_entrada, d.turno_salida, " + "       d.horas_trabajadas, d.horas_extras, " + "       d.festivo, d.justificado, d.observaciones, " + "       d.creado_en, d.modificado_en " + "FROM dias d ";
+    private static final String SQL_HOY = SQL_BASE + "WHERE d.cod_empleado=? AND d.fecha=CURRENT_DATE LIMIT 1";
+    private static final String SQL_POR_EMPLEADO_RANGO = SQL_BASE + "WHERE d.cod_empleado=? AND d.fecha BETWEEN ? AND ? ORDER BY d.fecha DESC";
+    private static final String SQL_POR_FECHA = SQL_BASE + "WHERE d.fecha=? ORDER BY d.entrada_hora";
+    private static final String SQL_TODOS_CON_EMPLEADO = "SELECT d.id, d.fecha, d.cod_empleado, " + "       CONCAT(e.nombre,' ',e.apellido1) AS nombre_completo, " + "       e.rol, " + "       d.entrada_hora, d.salida_hora, " + "       d.turno_entrada, d.turno_salida, " + "       d.horas_trabajadas, d.horas_extras, " + "       d.festivo, d.justificado, d.observaciones, " + "       d.creado_en, d.modificado_en " + "FROM dias d " + "JOIN empleados e ON d.cod_empleado = e.cod_empleado " + "WHERE d.fecha BETWEEN ? AND ? ORDER BY d.fecha DESC, e.apellido1";
+    private static final String SQL_ACTUALIZAR = "UPDATE dias SET entrada_hora=?, salida_hora=?, turno_entrada=?, turno_salida=?, " + "horas_trabajadas=?, horas_extras=?, festivo=?, justificado=?, observaciones=? " + "WHERE id=?";
     private static final String SQL_ELIMINAR = "DELETE FROM dias WHERE id=?";
-
-    private static final String SQL_ESTA_FICHADO =
-            "SELECT COUNT(*) FROM dias WHERE cod_empleado=? AND fecha=CURRENT_DATE AND salida_hora IS NULL";
-
+    private static final String SQL_ESTA_FICHADO = "SELECT COUNT(*) FROM dias WHERE cod_empleado=? AND fecha=CURRENT_DATE AND salida_hora IS NULL";
     // Stored procedure de MySQL para registrar fichaje
     private static final String SQL_REGISTRAR_FICHAJE = "CALL registrar_fichaje(?, @p_mensaje, @p_tipo)";
     private static final String SQL_GET_OUT_PARAMS = "SELECT @p_mensaje AS mensaje, @p_tipo AS tipo";
+    private final Rol rolConexion;
+    public RepositorioFichaje(Rol rolConexion) {
+        this.rolConexion = rolConexion;
+    }
 
     @Override
     public String registrarFichaje(int codEmpleado) {

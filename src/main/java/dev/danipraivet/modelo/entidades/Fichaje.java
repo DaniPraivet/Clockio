@@ -4,8 +4,8 @@ import dev.danipraivet.modelo.enumeraciones.Turno;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 
 // Entidad que representa un registro de fichaje diario. Mapeada a la tabla 'dias' de MySQL.
@@ -206,9 +206,6 @@ public class Fichaje {
 
     @Override
     public String toString() {
-        return "Fichaje{id=" + id + ", codEmpleado=" + codEmpleado +
-                ", fecha=" + fecha + ", entrada=" + entradaHora +
-                ", salida=" + salidaHora + ", horas=" + horasTrabajadas +
-                ", estado='" + getEstado() + "'}";
+        return "Fichaje{id=" + id + ", codEmpleado=" + codEmpleado + ", fecha=" + fecha + ", entrada=" + entradaHora + ", salida=" + salidaHora + ", horas=" + horasTrabajadas + ", estado='" + getEstado() + "'}";
     }
 }

@@ -22,8 +22,7 @@ public class Departamento {
     }
 
     // Constructor completo usado al leer desde JDBC
-    public Departamento(int codDepartamento, String nombre, String descripcion,
-                        boolean activo, LocalDateTime fechaCreacion) {
+    public Departamento(int codDepartamento, String nombre, String descripcion, boolean activo, LocalDateTime fechaCreacion) {
         this.codDepartamento = codDepartamento;
         this.nombre = nombre;
         this.descripcion = descripcion;

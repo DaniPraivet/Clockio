@@ -2,8 +2,8 @@ package dev.danipraivet.modelo.servicio;
 
 import dev.danipraivet.modelo.entidades.Empleado;
 import dev.danipraivet.modelo.enumeraciones.Rol;
-import dev.danipraivet.modelo.repositorio.implementacion.RepositorioEmpleado;
 import dev.danipraivet.modelo.repositorio.contratos.IRepositorioEmpleado;
+import dev.danipraivet.modelo.repositorio.implementacion.RepositorioEmpleado;
 import dev.danipraivet.modelo.seguridad.HashContrasena;
 import dev.danipraivet.modelo.utilidades.GestorSesion;
 import org.slf4j.Logger;
@@ -18,15 +18,6 @@ public class ServicioAutenticacion {
 
     // El login usa el rol con minimos privilegios para consultar la BD
     private final IRepositorioEmpleado repo = new RepositorioEmpleado(Rol.EMPLEADO);
-
-    // Posibles resultados del intento de login
-    public enum ResultadoLogin {
-        EXITO,
-        CREDENCIALES_INCORRECTAS,
-        CUENTA_BLOQUEADA,
-        CUENTA_INACTIVA,
-        ERROR_SISTEMA
-    }
 
     public ResultadoLogin login(String username, String contrasena) {
         if (username == null || username.isBlank() || contrasena == null || contrasena.isBlank()) {
@@ -54,8 +45,7 @@ public class ServicioAutenticacion {
 
             if (!HashContrasena.verificar(contrasena, empleado.getPasswordHash())) {
                 repo.registrarIntentoFallido(username);
-                log.warn("Login fallido - contrasena incorrecta: '{}' (intentos: {})",
-                        username, empleado.getIntentosFallidos() + 1);
+                log.warn("Login fallido - contrasena incorrecta: '{}' (intentos: {})", username, empleado.getIntentosFallidos() + 1);
                 return ResultadoLogin.CREDENCIALES_INCORRECTAS;
             }
 
@@ -86,5 +76,10 @@ public class ServicioAutenticacion {
             case ERROR_SISTEMA -> "Error del sistema. Intentalo de nuevo.";
             case EXITO -> "";
         };
+    }
+
+    // Posibles resultados del intento de login
+    public enum ResultadoLogin {
+        EXITO, CREDENCIALES_INCORRECTAS, CUENTA_BLOQUEADA, CUENTA_INACTIVA, ERROR_SISTEMA
     }
 }

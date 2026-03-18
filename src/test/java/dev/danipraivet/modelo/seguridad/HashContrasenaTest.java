@@ -13,9 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("PU-01 - HashContrasena")
 class HashContrasenaTest {
 
-    // ---------------------------------------------------------------
     // hashear()
-    // ---------------------------------------------------------------
 
     @Test
     @DisplayName("Hashear una contraseña válida genera un hash BCrypt no nulo")
@@ -51,9 +49,7 @@ class HashContrasenaTest {
         assertThrows(IllegalArgumentException.class, () -> HashContrasena.hashear("   "));
     }
 
-    // ---------------------------------------------------------------
     // verificar()
-    // ---------------------------------------------------------------
 
     @Test
     @DisplayName("Verificar contraseña correcta contra su hash devuelve true")
