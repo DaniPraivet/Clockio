@@ -2,8 +2,8 @@ package dev.danipraivet.modelo.servicio;
 
 import dev.danipraivet.modelo.entidades.Fichaje;
 import dev.danipraivet.modelo.enumeraciones.Rol;
-import dev.danipraivet.modelo.repositorio.implementacion.RepositorioFichaje;
 import dev.danipraivet.modelo.repositorio.contratos.IRepositorioFichaje;
+import dev.danipraivet.modelo.repositorio.implementacion.RepositorioFichaje;
 import dev.danipraivet.modelo.utilidades.GestorSesion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

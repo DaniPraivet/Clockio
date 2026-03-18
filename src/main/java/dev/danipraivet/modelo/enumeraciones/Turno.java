@@ -3,9 +3,7 @@ package dev.danipraivet.modelo.enumeraciones;
 // Turnos laborales. Coincide con el ENUM de las columnas 'turno_entrada' / 'turno_salida' en MySQL.
 public enum Turno {
 
-    MANANA("Mañana", 6, 13),
-    TARDE("Tarde", 14, 21),
-    NOCHE("Noche", 22, 5);
+    MANANA("Mañana", 6, 13), TARDE("Tarde", 14, 21), NOCHE("Noche", 22, 5);
 
     private final String etiqueta;
     private final int horaInicio;
@@ -15,18 +13,6 @@ public enum Turno {
         this.etiqueta = etiqueta;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
-    }
-
-    public String getEtiqueta() {
-        return etiqueta;
-    }
-
-    public int getHoraInicio() {
-        return horaInicio;
-    }
-
-    public int getHoraFin() {
-        return horaFin;
     }
 
     // Detecta el turno segun la hora actual del sistema
@@ -46,6 +32,18 @@ public enum Turno {
             case "Noche" -> NOCHE;
             default -> null;
         };
+    }
+
+    public String getEtiqueta() {
+        return etiqueta;
+    }
+
+    public int getHoraInicio() {
+        return horaInicio;
+    }
+
+    public int getHoraFin() {
+        return horaFin;
     }
 
     @Override

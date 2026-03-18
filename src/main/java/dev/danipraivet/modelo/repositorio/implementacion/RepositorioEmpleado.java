@@ -18,54 +18,26 @@ import java.util.Optional;
 public class RepositorioEmpleado implements IRepositorioEmpleado {
 
     private static final Logger log = LoggerFactory.getLogger(RepositorioEmpleado.class);
-
-    private final Rol rolConexion;
-
-    public RepositorioEmpleado(Rol rolConexion) {
-        this.rolConexion = rolConexion;
-    }
-
     // SELECT base con JOIN a departamentos
-    private static final String SQL_BASE =
-            "SELECT e.cod_empleado, e.nombre, e.apellido1, e.apellido2, e.dni, " +
-                    "       e.email, e.telefono, e.username, e.password_hash, e.rol, " +
-                    "       e.activo, e.intentos_fallidos, e.bloqueado, " +
-                    "       e.fecha_alta, e.fecha_baja, e.ultimo_acceso, " +
-                    "       d.cod_departamento, d.nombre AS dep_nombre " +
-                    "FROM empleados e " +
-                    "LEFT JOIN departamentos d ON e.cod_departamento = d.cod_departamento ";
-
+    private static final String SQL_BASE = "SELECT e.cod_empleado, e.nombre, e.apellido1, e.apellido2, e.dni, " + "       e.email, e.telefono, e.username, e.password_hash, e.rol, " + "       e.activo, e.intentos_fallidos, e.bloqueado, " + "       e.fecha_alta, e.fecha_baja, e.ultimo_acceso, " + "       d.cod_departamento, d.nombre AS dep_nombre " + "FROM empleados e " + "LEFT JOIN departamentos d ON e.cod_departamento = d.cod_departamento ";
     private static final String SQL_POR_CODIGO = SQL_BASE + "WHERE e.cod_empleado = ?";
     private static final String SQL_POR_USERNAME = SQL_BASE + "WHERE e.username = ?";
     private static final String SQL_POR_DNI = SQL_BASE + "WHERE e.dni = ?";
     private static final String SQL_TODOS_ACTIVOS = SQL_BASE + "WHERE e.activo = TRUE ORDER BY e.apellido1, e.nombre";
     private static final String SQL_TODOS = SQL_BASE + "ORDER BY e.activo DESC, e.apellido1";
-
-    private static final String SQL_INSERTAR =
-            "INSERT INTO empleados (cod_empleado, nombre, apellido1, apellido2, dni, " +
-                    "email, telefono, username, password_hash, rol, cod_departamento) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    private static final String SQL_ACTUALIZAR =
-            "UPDATE empleados SET nombre=?, apellido1=?, apellido2=?, dni=?, " +
-                    "email=?, telefono=?, username=?, rol=?, cod_departamento=? " +
-                    "WHERE cod_empleado=?";
-
-    private static final String SQL_BAJA_LOGICA =
-            "UPDATE empleados SET activo=FALSE, fecha_baja=NOW() WHERE cod_empleado=?";
-
-    private static final String SQL_ELIMINAR =
-            "DELETE FROM empleados WHERE cod_empleado=?";
-
-    private static final String SQL_INTENTO_FALLIDO =
-            "UPDATE empleados SET intentos_fallidos = intentos_fallidos + 1, " +
-                    "bloqueado = (intentos_fallidos + 1 >= 5) WHERE username=?";
-
-    private static final String SQL_LOGIN_EXITOSO =
-            "UPDATE empleados SET intentos_fallidos=0, ultimo_acceso=NOW() WHERE username=?";
-
+    private static final String SQL_INSERTAR = "INSERT INTO empleados (cod_empleado, nombre, apellido1, apellido2, dni, " + "email, telefono, username, password_hash, rol, cod_departamento) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_ACTUALIZAR = "UPDATE empleados SET nombre=?, apellido1=?, apellido2=?, dni=?, " + "email=?, telefono=?, username=?, rol=?, cod_departamento=? " + "WHERE cod_empleado=?";
+    private static final String SQL_BAJA_LOGICA = "UPDATE empleados SET activo=FALSE, fecha_baja=NOW() WHERE cod_empleado=?";
+    private static final String SQL_AUDITAR_BAJA = "INSERT INTO auditoria (cod_empleado, username, accion, detalle, tabla_afectada, registro_id) " + "VALUES (?, ?, 'BAJA_LOGICA', ?, 'empleados', ?)";
+    private static final String SQL_ELIMINAR = "DELETE FROM empleados WHERE cod_empleado=?";
+    private static final String SQL_INTENTO_FALLIDO = "UPDATE empleados SET intentos_fallidos = intentos_fallidos + 1, " + "bloqueado = (intentos_fallidos + 1 >= 5) WHERE username=?";
+    private static final String SQL_LOGIN_EXITOSO = "UPDATE empleados SET intentos_fallidos=0, ultimo_acceso=NOW() WHERE username=?";
     private static final String SQL_EXISTE_USERNAME = "SELECT COUNT(*) FROM empleados WHERE username=?";
     private static final String SQL_EXISTE_DNI = "SELECT COUNT(*) FROM empleados WHERE dni=?";
+    private final Rol rolConexion;
+    public RepositorioEmpleado(Rol rolConexion) {
+        this.rolConexion = rolConexion;
+    }
 
     @Override
     public Optional<Empleado> buscarPorCodigo(int codEmpleado) {
@@ -191,9 +163,65 @@ public class RepositorioEmpleado implements IRepositorioEmpleado {
         }
     }
 
+    /**
+     * Baja logica de un empleado con transaccion explicita.
+     * Las dos operaciones se ejecutan
+     * de forma atomica, si alguna falla, se deshace todo con rollback.
+     */
     @Override
     public boolean darDeBaja(int codEmpleado) {
-        return ejecutarUpdate(SQL_BAJA_LOGICA, codEmpleado);
+        Connection con = null;
+        try {
+            con = GestorConexiones.getConexion(rolConexion);
+            con.setAutoCommit(false);
+
+            // 1 desactivar al empleado
+            PreparedStatement psBaja = con.prepareStatement(SQL_BAJA_LOGICA);
+            psBaja.setInt(1, codEmpleado);
+            int filasAfectadas = psBaja.executeUpdate();
+
+            if (filasAfectadas == 0) {
+                con.rollback();
+                log.warn("Baja denegada: empleado {} no encontrado. Rollback aplicado.", codEmpleado);
+                return false;
+            }
+
+            // 2 registrar la baja en la tabla de auditoria
+            String detalle = String.format("Baja logica del empleado cod=%d registrada por el sistema", codEmpleado);
+            String usuarioSesion = dev.danipraivet.modelo.utilidades.GestorSesion.haySesionActiva() ? dev.danipraivet.modelo.utilidades.GestorSesion.getEmpleado().getUsername() : "sistema";
+
+            PreparedStatement psAudit = con.prepareStatement(SQL_AUDITAR_BAJA);
+            psAudit.setInt(1, codEmpleado);
+            psAudit.setString(2, usuarioSesion);
+            psAudit.setString(3, detalle);
+            psAudit.setInt(4, codEmpleado);
+            psAudit.executeUpdate();
+
+            con.commit();
+            log.info("Baja logica completada con exito para empleado {}. Transaccion confirmada.", codEmpleado);
+            return true;
+
+        } catch (SQLException e) {
+            log.error("Error en transaccion de baja para empleado {}: {}", codEmpleado, e.getMessage());
+            if (con != null) {
+                try {
+                    con.rollback();
+                    log.warn("Rollback aplicado tras error en baja del empleado {}.", codEmpleado);
+                } catch (SQLException ex) {
+                    log.error("Error al aplicar rollback: {}", ex.getMessage());
+                }
+            }
+            return false;
+        } finally {
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true);
+                } catch (SQLException e) {
+                    log.warn("Error al restaurar autoCommit: {}", e.getMessage());
+                }
+            }
+            GestorConexiones.liberarConexion(rolConexion, con);
+        }
     }
 
     @Override

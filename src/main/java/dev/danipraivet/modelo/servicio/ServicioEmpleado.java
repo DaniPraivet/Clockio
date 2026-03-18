@@ -2,8 +2,8 @@ package dev.danipraivet.modelo.servicio;
 
 import dev.danipraivet.modelo.entidades.Empleado;
 import dev.danipraivet.modelo.enumeraciones.Rol;
-import dev.danipraivet.modelo.repositorio.implementacion.RepositorioEmpleado;
 import dev.danipraivet.modelo.repositorio.contratos.IRepositorioEmpleado;
+import dev.danipraivet.modelo.repositorio.implementacion.RepositorioEmpleado;
 import dev.danipraivet.modelo.seguridad.HashContrasena;
 import dev.danipraivet.modelo.utilidades.GestorSesion;
 import dev.danipraivet.modelo.utilidades.ValidadorFormularios;
@@ -23,17 +23,6 @@ public class ServicioEmpleado {
     public ServicioEmpleado() {
         Rol rol = GestorSesion.haySesionActiva() ? GestorSesion.getRol() : Rol.RRHH;
         this.repo = new RepositorioEmpleado(rol);
-    }
-
-    // Resultado de una operacion CRUD con exito/fallo y mensaje descriptivo
-    public record ResultadoCRUD(boolean exito, String mensaje) {
-        public static ResultadoCRUD ok(String msg) {
-            return new ResultadoCRUD(true, msg);
-        }
-
-        public static ResultadoCRUD error(String msg) {
-            return new ResultadoCRUD(false, msg);
-        }
     }
 
     public List<Empleado> listarActivos() {
@@ -59,32 +48,24 @@ public class ServicioEmpleado {
         String errPass = ValidadorFormularios.mensajeContrasena(contrasenaPlana);
         if (errPass != null) return ResultadoCRUD.error("Contrasena: " + errPass);
 
-        if (empleado.getEmail() != null && !empleado.getEmail().isBlank()
-                && !ValidadorFormularios.emailValido(empleado.getEmail()))
+        if (empleado.getEmail() != null && !empleado.getEmail().isBlank() && !ValidadorFormularios.emailValido(empleado.getEmail()))
             return ResultadoCRUD.error("Email con formato invalido.");
 
-        if (repo.existeDni(empleado.getDni()))
-            return ResultadoCRUD.error("Ya existe un empleado con ese DNI.");
+        if (repo.existeDni(empleado.getDni())) return ResultadoCRUD.error("Ya existe un empleado con ese DNI.");
 
-        if (repo.existeUsername(empleado.getUsername()))
-            return ResultadoCRUD.error("El username ya esta en uso.");
+        if (repo.existeUsername(empleado.getUsername())) return ResultadoCRUD.error("El username ya esta en uso.");
 
         empleado.setPasswordHash(HashContrasena.hashear(contrasenaPlana));
 
         boolean ok = repo.insertar(empleado);
-        return ok
-                ? ResultadoCRUD.ok("Empleado creado correctamente.")
-                : ResultadoCRUD.error("Error al guardar en la base de datos.");
+        return ok ? ResultadoCRUD.ok("Empleado creado correctamente.") : ResultadoCRUD.error("Error al guardar en la base de datos.");
     }
 
     public ResultadoCRUD actualizar(Empleado empleado) {
-        if (!ValidadorFormularios.dniValido(empleado.getDni()))
-            return ResultadoCRUD.error("DNI invalido.");
+        if (!ValidadorFormularios.dniValido(empleado.getDni())) return ResultadoCRUD.error("DNI invalido.");
 
         boolean ok = repo.actualizar(empleado);
-        return ok
-                ? ResultadoCRUD.ok("Datos actualizados correctamente.")
-                : ResultadoCRUD.error("Error al actualizar en la base de datos.");
+        return ok ? ResultadoCRUD.ok("Datos actualizados correctamente.") : ResultadoCRUD.error("Error al actualizar en la base de datos.");
     }
 
     public ResultadoCRUD cambiarContrasena(int codEmpleado, String nuevaContrasenaPlana) {
@@ -97,9 +78,7 @@ public class ServicioEmpleado {
         Empleado e = opt.get();
         e.setPasswordHash(HashContrasena.hashear(nuevaContrasenaPlana));
         boolean ok = repo.actualizar(e);
-        return ok
-                ? ResultadoCRUD.ok("Contrasena actualizada correctamente.")
-                : ResultadoCRUD.error("Error al actualizar la contrasena.");
+        return ok ? ResultadoCRUD.ok("Contrasena actualizada correctamente.") : ResultadoCRUD.error("Error al actualizar la contrasena.");
     }
 
     // Baja logica: desactiva el empleado sin borrar su historial de fichajes
@@ -108,9 +87,7 @@ public class ServicioEmpleado {
             return ResultadoCRUD.error("No puedes darte de baja a ti mismo.");
 
         boolean ok = repo.darDeBaja(codEmpleado);
-        return ok
-                ? ResultadoCRUD.ok("Empleado dado de baja correctamente.")
-                : ResultadoCRUD.error("Error al dar de baja al empleado.");
+        return ok ? ResultadoCRUD.ok("Empleado dado de baja correctamente.") : ResultadoCRUD.error("Error al dar de baja al empleado.");
     }
 
     // Eliminacion fisica (solo Admin). Borra tambien todos sus fichajes en cascada.
@@ -119,9 +96,7 @@ public class ServicioEmpleado {
             return ResultadoCRUD.error("No puedes eliminarte a ti mismo.");
 
         boolean ok = repo.eliminar(codEmpleado);
-        return ok
-                ? ResultadoCRUD.ok("Empleado eliminado definitivamente.")
-                : ResultadoCRUD.error("Error al eliminar el empleado.");
+        return ok ? ResultadoCRUD.ok("Empleado eliminado definitivamente.") : ResultadoCRUD.error("Error al eliminar el empleado.");
     }
 
     public ResultadoCRUD desbloquear(int codEmpleado) {
@@ -132,8 +107,17 @@ public class ServicioEmpleado {
         e.setBloqueado(false);
         e.setIntentosFallidos(0);
         boolean ok = repo.actualizar(e);
-        return ok
-                ? ResultadoCRUD.ok("Cuenta desbloqueada.")
-                : ResultadoCRUD.error("Error al desbloquear la cuenta.");
+        return ok ? ResultadoCRUD.ok("Cuenta desbloqueada.") : ResultadoCRUD.error("Error al desbloquear la cuenta.");
+    }
+
+    // Resultado de una operacion CRUD con exito/fallo y mensaje descriptivo
+    public record ResultadoCRUD(boolean exito, String mensaje) {
+        public static ResultadoCRUD ok(String msg) {
+            return new ResultadoCRUD(true, msg);
+        }
+
+        public static ResultadoCRUD error(String msg) {
+            return new ResultadoCRUD(false, msg);
+        }
     }
 }

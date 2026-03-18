@@ -244,9 +244,7 @@ class ValidadorFormulariosTest {
         }
     }
 
-    // ---------------------------------------------------------------
     // noVacio
-    // ---------------------------------------------------------------
 
     @Nested
     @DisplayName("Validación de campo no vacío")

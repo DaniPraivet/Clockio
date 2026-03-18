@@ -20,9 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("PU-03 - Entidades del dominio")
 class EntidadesTest {
 
-    // ---------------------------------------------------------------
     // Empleado
-    // ---------------------------------------------------------------
 
     @Nested
     @DisplayName("Empleado")
@@ -117,15 +115,13 @@ class EntidadesTest {
         @Test
         @DisplayName("Constructor con parámetros establece activo=true por defecto")
         void constructor_conParametros_activoPorDefecto() {
-            Empleado e = new Empleado(1002, "Ana", "López", null, "87654321X",
-                    "alopez", "hash", Rol.RRHH);
+            Empleado e = new Empleado(1002, "Ana", "López", null, "87654321X", "alopez", "hash", Rol.RRHH);
             assertTrue(e.isActivo());
         }
     }
 
-    // ---------------------------------------------------------------
     // Fichaje
-    // ---------------------------------------------------------------
+
 
     @Nested
     @DisplayName("Fichaje")
@@ -230,9 +226,7 @@ class EntidadesTest {
         }
     }
 
-    // ---------------------------------------------------------------
     // Departamento
-    // ---------------------------------------------------------------
 
     @Nested
     @DisplayName("Departamento")
@@ -261,12 +255,10 @@ class EntidadesTest {
         }
     }
 
-    // ---------------------------------------------------------------
     // Enumeraciones
-    // ---------------------------------------------------------------
 
     @Nested
-    @DisplayName("Enumeraciones — Rol y Turno")
+    @DisplayName("Enumeraciones - Rol y Turno")
     class EnumeracionesTest {
 
         @Test
