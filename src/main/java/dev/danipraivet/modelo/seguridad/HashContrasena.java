@@ -6,13 +6,12 @@ import org.mindrot.jbcrypt.BCrypt;
 // BCrypt incluye salt aleatorio y factor de coste configurable.
 public final class HashContrasena {
 
-    // Factor de coste 12: buen equilibrio entre seguridad y rendimiento (~300ms en hardware moderno)
     private static final int COSTE = 12;
 
     private HashContrasena() {
     }
 
-    // Genera el hash BCrypt de una contrasena en texto plano
+    // Genera el hash BCrypt de una contraseña en texto plano
     public static String hashear(String contrasena) {
         if (contrasena == null || contrasena.isBlank()) {
             throw new IllegalArgumentException("La contrasena no puede estar vacia.");
@@ -26,7 +25,6 @@ public final class HashContrasena {
         try {
             return BCrypt.checkpw(contrasenaPlana, hash);
         } catch (IllegalArgumentException e) {
-            // Hash malformado (campo de BD vacio o corrupto)
             return false;
         }
     }
