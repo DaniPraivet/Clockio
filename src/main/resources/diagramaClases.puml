@@ -1,0 +1,442 @@
+@startuml
+'https://plantuml.com/es/class-diagram
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam groupInheritance 2
+skinparam linetype ortho
+
+' ENUMS
+package "modelo.enumeraciones" {
+
+    enum Rol {
+        EMPLEADO
+        RRHH
+        ADMIN
+        --
+        - etiqueta : String
+        --
+        + {static} fromString(valor : String) : Rol
+        + getEtiqueta() : String
+    }
+
+    enum Turno {
+        MANANA
+        TARDE
+        NOCHE
+        --
+        - etiqueta : String
+        - horaInicio : int
+        - horaFin : int
+        --
+        + {static} detectar() : Turno
+        + {static} fromString(valor : String) : Turno
+        + getEtiqueta() : String
+        + getHoraInicio() : int
+        + getHoraFin() : int
+    }
+}
+
+' ENTIDADES
+package "modelo.entidades" {
+
+    class Departamento {
+        - codDepartamento : int
+        - nombre : String
+        - descripcion : String
+        - activo : boolean
+        - fechaCreacion : LocalDateTime
+        --
+        + getCodDepartamento() : int
+        + getNombre() : String
+        + isActivo() : boolean
+        + getFechaCreacion() : LocalDateTime
+    }
+
+    class Empleado {
+        - codEmpleado : int
+        - nombre : String
+        - apellido1 : String
+        - apellido2 : String
+        - dni : String
+        - email : String
+        - telefono : String
+        - username : String
+        - passwordHash : String
+        - activo : boolean
+        - intentosFallidos : int
+        - bloqueado : boolean
+        - fechaAlta : LocalDateTime
+        - fechaBaja : LocalDateTime
+        - ultimoAcceso : LocalDateTime
+        --
+        + getNombreCompleto() : String
+        + getIniciales() : String
+        + estaOperativo() : boolean
+        + getRol() : Rol
+        + getDepartamento() : Departamento
+    }
+
+    class Fichaje {
+        - id : int
+        - fecha : LocalDate
+        - codEmpleado : int
+        - entradaHora : LocalTime
+        - salidaHora : LocalTime
+        - horasTrabajadas : BigDecimal
+        - horasExtras : BigDecimal
+        - festivo : boolean
+        - justificado : boolean
+        - observaciones : String
+        - creadoEn : LocalDateTime
+        - modificadoEn : LocalDateTime
+        --
+        + estaCompleto() : boolean
+        + estaFichado() : boolean
+        + getHorasFormateadas() : String
+        + getEstado() : String
+        + getTurnoEntrada() : Turno
+        + getTurnoSalida() : Turno
+        + getEmpleado() : Empleado
+    }
+}
+
+' MODELO
+package "modelo.datos" {
+
+    class ConfiguracionBD <<final>> {
+        + {static} HOST : String
+        + {static} PORT : String
+        + {static} DATABASE : String
+        + {static} URL : String
+        + {static} EMPLEADO_USER : String
+        + {static} EMPLEADO_PASS : String
+        + {static} RRHH_USER : String
+        + {static} RRHH_PASS : String
+        + {static} ADMIN_USER : String
+        + {static} ADMIN_PASS : String
+        + {static} POOL_SIZE_MIN : int
+        + {static} POOL_SIZE_MAX : int
+        + {static} TIMEOUT_SEGUNDOS : int
+    }
+
+    class GestorConexiones {
+        - {static} pools : Map<Rol, Deque<Connection>>
+        - {static} CREDENCIALES : Map<Rol, String[]>
+        --
+        + {static} getConexion(rol : Rol) : Connection
+        + {static} liberarConexion(rol : Rol, con : Connection) : void
+        + {static} testConexion() : boolean
+        + {static} cerrarPool() : void
+    }
+}
+
+' CONTRATOS (Interfaces de repositorio)
+package "modelo.repositorio.contratos" {
+
+    interface IRepositorioEmpleado {
+        + buscarPorCodigo(codEmpleado : int) : Optional<Empleado>
+        + buscarPorUsername(username : String) : Optional<Empleado>
+        + buscarPorDni(dni : String) : Optional<Empleado>
+        + listarTodos() : List<Empleado>
+        + listarTodosIncluyendoBajas() : List<Empleado>
+        + insertar(empleado : Empleado) : boolean
+        + actualizar(empleado : Empleado) : boolean
+        + darDeBaja(codEmpleado : int) : boolean
+        + eliminar(codEmpleado : int) : boolean
+        + registrarIntentoFallido(username : String) : boolean
+        + registrarLoginExitoso(username : String) : boolean
+        + existeUsername(username : String) : boolean
+        + existeDni(dni : String) : boolean
+    }
+
+    interface IRepositorioFichaje {
+        + registrarFichaje(codEmpleado : int) : String
+        + buscarFichajeHoy(codEmpleado : int) : Optional<Fichaje>
+        + buscarPorEmpleadoYRango(codEmpleado : int, desde : LocalDate, hasta : LocalDate) : List<Fichaje>
+        + buscarPorFecha(fecha : LocalDate) : List<Fichaje>
+        + listarTodosConEmpleado(desde : LocalDate, hasta : LocalDate) : List<Fichaje>
+        + actualizar(fichaje : Fichaje) : boolean
+        + eliminar(id : int) : boolean
+        + estaFichadoHoy(codEmpleado : int) : boolean
+    }
+}
+
+' IMPLEMENTACIONES DE REPOSITORIO
+package "modelo.repositorio.implementacion" {
+
+    class RepositorioEmpleado {
+        - rol : Rol
+        --
+        + RepositorioEmpleado(rol : Rol)
+    }
+
+    class RepositorioFichaje {
+        - rol : Rol
+        --
+        + RepositorioFichaje(rol : Rol)
+    }
+}
+
+' SEGURIDAD
+package "modelo.seguridad" {
+
+    class HashContrasena <<final>> {
+        - {static} COSTE : int
+        --
+        + {static} hashear(contrasena : String) : String
+        + {static} verificar(contrasenaPlana : String, hash : String)  : boolean
+    }
+}
+
+' SERVICIOS
+package "modelo.servicio" {
+
+    class ServicioAutenticacion {
+        - repo : IRepositorioEmpleado
+        --
+        + login(username : String, contrasena : String) : ResultadoLogin
+        + logout() : void
+        + getMensajeError(resultado : ResultadoLogin) : String
+    }
+
+    enum "ServicioAutenticacion.ResultadoLogin" as ResultadoLogin {
+        EXITO
+        CREDENCIALES_INCORRECTAS
+        CUENTA_BLOQUEADA
+        CUENTA_INACTIVA
+        ERROR_SISTEMA
+    }
+
+    class ServicioEmpleado {
+        - repo : IRepositorioEmpleado
+        --
+        + listarActivos() : List<Empleado>
+        + listarTodos() : List<Empleado>
+        + buscarPorCodigo(cod : int) : Optional<Empleado>
+        + crear(empleado : Empleado, contrasenaPlana : String) : ResultadoCRUD
+        + actualizar(empleado : Empleado) : ResultadoCRUD
+        + cambiarContrasena(codEmpleado : int, nuevaContrasena : String) : ResultadoCRUD
+        + darDeBaja(codEmpleado : int) : ResultadoCRUD
+        + eliminar(codEmpleado : int) : ResultadoCRUD
+        + desbloquear(codEmpleado : int) : ResultadoCRUD
+    }
+
+    class "ServicioEmpleado.ResultadoCRUD" as ResultadoCRUD <<record>> {
+        + exito   : boolean
+        + mensaje : String
+        --
+        + {static} ok(msg : String) : ResultadoCRUD
+        + {static} error(msg : String) : ResultadoCRUD
+    }
+
+    class ServicioFichaje {
+        - repo : IRepositorioFichaje
+        --
+        + fichar() : String
+        + ficharPor(codEmpleado : int) : String
+        + estaFichadoHoy() : boolean
+        + getFichajeHoy() : Optional<Fichaje>
+        + getFichajeHoyDe(codEmpleado : int) : Optional<Fichaje>
+        + getMesActual() : List<Fichaje>
+        + getHistorial(codEmpleado : int, desde : LocalDate, hasta : LocalDate) : List<Fichaje>
+        + getFichajesPorFecha(fecha : LocalDate) : List<Fichaje>
+        + getTodosConEmpleado(desde : LocalDate, hasta : LocalDate) : List<Fichaje>
+        + actualizar(fichaje : Fichaje) : boolean
+        + eliminar(id : int)  : boolean
+    }
+
+    class ServicioInformes {
+        --
+        + generarPDF(empleado : Empleado, fichajes : List<Fichaje>, desde : LocalDate, hasta : LocalDate, destino : File) : boolean
+        + generarExcel(empleado : Empleado, fichajes : List<Fichaje>, desde : LocalDate, hasta : LocalDate, destino : File) : boolean
+    }
+}
+
+' UTILIDADES
+package "modelo.utilidades" {
+
+    class GestorSesion <<final>> {
+        - {static} empleadoActual : Empleado
+        --
+        + {static} iniciarSesion(empleado : Empleado) : void
+        + {static} cerrarSesion() : void
+        + {static} haySesionActiva() : boolean
+        + {static} getEmpleado() : Empleado
+        + {static} getCodEmpleado() : int
+        + {static} getRol() : Rol
+        + {static} getNombreCompleto() : String
+        + {static} esEmpleado() : boolean
+        + {static} esRRHH() : boolean
+        + {static} esAdmin() : boolean
+        + {static} tienePermisoGestion() : boolean
+    }
+
+    class ValidadorFormularios <<final>> {
+        - {static} PATRON_DNI : Pattern
+        - {static} PATRON_EMAIL : Pattern
+        - {static} PATRON_TELEFONO : Pattern
+        - {static} PATRON_USERNAME : Pattern
+        - {static} LETRAS_DNI : String
+        --
+        + {static} dniValido(dni : String) : boolean
+        + {static} emailValido(email : String) : boolean
+        + {static} telefonoValido(telefono : String) : boolean
+        + {static} usernameValido(username : String) : boolean
+        + {static} contrasenaSegura(contrasena : String) : boolean
+        + {static} noVacio(valor : String) : boolean
+        + {static} mensajeDni(dni : String) : String
+        + {static} mensajeContrasena(contrasena : String) : String
+    }
+
+    class GeneradorHashes {
+        + {static} main(args : String[]) : void
+    }
+}
+
+' CONTROLADORES
+package "controlador" {
+
+    class ControladorLogin {
+        - servicioAuth : ServicioAutenticacion
+        --
+        + initialize(url : URL, rb : ResourceBundle) : void
+        + onLogin() : void
+    }
+
+    class ControladorEmpleado {
+        - servicioFichaje : ServicioFichaje
+        - servicioAuth : ServicioAutenticacion
+        --
+        + initialize(url : URL, rb : ResourceBundle) : void
+        + onFichar() : void
+        + onLogout() : void
+    }
+
+    class ControladorAdmin {
+        - servicioFichaje : ServicioFichaje
+        - servicioEmpleado : ServicioEmpleado
+        - servicioAuth : ServicioAutenticacion
+        --
+        + initialize(url : URL, rb : ResourceBundle) : void
+        + onFicharAdmin() : void
+        + onBuscarFichajes() : void
+        + onGuardarFichaje() : void
+        + onEliminarFichaje() : void
+        + onDesbloquear() : void
+        + onEliminarEmpleado() : void
+        + onLogout() : void
+    }
+
+    class ControladorRRHH {
+        - servicioFichaje : ServicioFichaje
+        - servicioEmpleado : ServicioEmpleado
+        - servicioAuth : ServicioAutenticacion
+        - servicioInformes : ServicioInformes
+        --
+        + initialize(url : URL, rb : ResourceBundle) : void
+        + onFicharRRHH() : void
+        + onNuevo() : void
+        + onGuardar() : void
+        + onDarDeBaja() : void
+        + onGenerarPdf() : void
+        + onGenerarExcel() : void
+        + onLogout() : void
+    }
+}
+
+' VISTA
+package "vista" {
+
+    class Aplicacion {
+        - {static} escenarioPrincipal : Stage
+        --
+        + {static} navegarA(vista : String) : void
+        + {static} getEscenarioPrincipal() : Stage
+        + start(stage : Stage) : void
+        + stop() : void
+    }
+
+    class GestorAlertas <<final>> {
+        --
+        + {static} info(titulo : String, mensaje : String) : void
+        + {static} advertencia(titulo : String, mensaje : String): void
+        + {static} error(titulo : String, mensaje : String) : void
+        + {static} confirmar(titulo : String, mensaje : String) : boolean
+    }
+}
+
+class Main {
+    + {static} main(args : String[]) : void
+}
+
+' RELACIONES
+
+' Implementación de interfaces (realización)
+IRepositorioEmpleado <|.. RepositorioEmpleado
+IRepositorioFichaje  <|.. RepositorioFichaje
+
+' Asociaciones entre entidades
+Empleado     "1"   -->  "1"    Rol          : tiene >
+Empleado     "1"   -->  "0..1" Departamento : pertenece a >
+Fichaje      "1"   -->  "0..1" Turno        : turnoEntrada >
+Fichaje      "1"   -->  "0..1" Turno        : turnoSalida >
+Fichaje      "n"   -->  "1"    Empleado     : registrado para >
+
+' Capa de datos
+GestorConexiones ..> ConfiguracionBD : usa
+GestorConexiones ..> Rol             : organiza por
+
+' Repositorios -> datos
+RepositorioEmpleado ..> GestorConexiones : obtiene conexión
+RepositorioFichaje  ..> GestorConexiones : obtiene conexión
+
+' Servicios -> repositorios (inyección por interfaz)
+ServicioAutenticacion "1" --> "1" IRepositorioEmpleado : repo
+ServicioEmpleado      "1" --> "1" IRepositorioEmpleado : repo
+ServicioFichaje       "1" --> "1" IRepositorioFichaje  : repo
+
+' Servicios -> utilidades y seguridad
+ServicioAutenticacion ..> GestorSesion        : gestiona sesión
+ServicioAutenticacion ..> HashContrasena      : verifica hash
+ServicioEmpleado      ..> GestorSesion        : consulta sesión
+ServicioEmpleado      ..> ValidadorFormularios : valida datos
+ServicioEmpleado      ..> HashContrasena      : genera hash
+ServicioFichaje       ..> GestorSesion        : consulta sesión
+
+' Clases internas (anidadas)
+ServicioAutenticacion +-- ResultadoLogin
+ServicioEmpleado      +-- ResultadoCRUD
+
+' Controladores -> servicios
+ControladorLogin   --> ServicioAutenticacion
+ControladorEmpleado --> ServicioFichaje
+ControladorEmpleado --> ServicioAutenticacion
+ControladorAdmin   --> ServicioFichaje
+ControladorAdmin   --> ServicioEmpleado
+ControladorAdmin   --> ServicioAutenticacion
+ControladorRRHH    --> ServicioFichaje
+ControladorRRHH    --> ServicioEmpleado
+ControladorRRHH    --> ServicioAutenticacion
+ControladorRRHH    --> ServicioInformes
+
+' Controladores -> vista (navegación)
+ControladorLogin    ..> Aplicacion : navegarA()
+ControladorEmpleado ..> Aplicacion : navegarA()
+ControladorAdmin    ..> Aplicacion : navegarA()
+ControladorRRHH     ..> Aplicacion : navegarA()
+
+' Controladores -> utilidades de vista
+ControladorAdmin ..> GestorAlertas  : muestra alertas
+ControladorRRHH  ..> GestorAlertas  : muestra alertas
+ControladorAdmin ..> GestorSesion   : consulta sesión
+ControladorEmpleado ..> GestorSesion : consulta sesión
+ControladorRRHH  ..> GestorSesion   : consulta sesión
+
+' Vista -> datos
+Aplicacion ..> GestorConexiones : testConexion() / cerrarPool()
+
+' Punto de entrada
+Main ..> Aplicacion : lanza
+
+@enduml

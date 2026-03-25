@@ -1,0 +1,11 @@
+@startgantt
+
+Project starts 2025-09-01
+
+[Generar ideas] starts 2025-09-19 and ends 2025-10-31
+[Planificacion del proyecto] starts 2025-11-01 and ends 2026-01-31
+[Programacion] starts 2026-01-21 and ends 2026-03-31
+[Documentacion] starts 2026-03-10 and ends 2026-04-30
+[Entrega] starts 2026-05-01 and ends 2026-05-5
+
+@endgantt
