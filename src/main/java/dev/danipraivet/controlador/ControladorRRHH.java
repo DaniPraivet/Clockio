@@ -235,7 +235,7 @@ public class ControladorRRHH implements Initializable {
             lblEstadoRRHH.setText("Actualmente trabajando");
         } else {
             btnFicharRRHH.setText("Entrada");
-            btnFicharRRHH.setStyle("-fx-background-color: #43a047; -fx-text-fill: white;");
+            btnFicharRRHH.setStyle("-fx-background-color: #124914; -fx-text-fill: white;");
             lblEstadoRRHH.setText("No fichado");
         }
     }

@@ -20,13 +20,13 @@
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #1565C0;
+    -fx-background-color: #001860;
     -fx-background-radius: 8 8 0 0;
 }
 
 .table-view .column-header {
     -fx-background-color: transparent;
-    -fx-border-color: transparent #1976D2 transparent transparent;
+    -fx-border-color: transparent #002571 transparent transparent;
     -fx-border-width: 0 1 0 0;
     -fx-size: 40px;
 }
@@ -60,7 +60,7 @@
 }
 
 .table-view .table-row-cell:selected .table-cell {
-    -fx-text-fill: #0D47A1;
+    -fx-text-fill: #051c6a;
 }
 
 .table-view .table-row-cell:empty {
@@ -140,14 +140,18 @@
 
 .tab-pane .tab:selected {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent #1565C0 transparent;
+    -fx-border-color: transparent transparent #001860 transparent;
     -fx-border-width: 0 0 3 0;
 }
 
 .tab-pane .tab:selected .tab-label {
-    -fx-text-fill: #1565C0;
+    -fx-text-fill: #001860;
 }
 
 .tab-pane .tab:hover .tab-label {
-    -fx-text-fill: #1565C0;
+    -fx-text-fill: #001860;
+}
+
+.mfx-text-field .floating-text {
+    -fx-text-fill: #000057;
 }

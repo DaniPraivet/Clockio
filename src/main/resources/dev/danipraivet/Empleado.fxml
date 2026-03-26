@@ -11,7 +11,7 @@
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="16"
-              style="-fx-background-color: #1565C0;
+              style="-fx-background-color: #001860;
                      -fx-padding: 14 28;
                      -fx-effect: dropshadow(gaussian, rgba(21,101,192,0.4), 10, 0, 0, 4);">
             <Label text="Clockio · Control de Asistencia"
@@ -55,10 +55,10 @@
                       style="-fx-background-color: white; -fx-background-radius: 16;
                              -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.14), 16, 0, 0, 5);
                              -fx-padding: 28 32;
-                             -fx-border-color: transparent transparent transparent #3f51b5;
+                             -fx-border-color: transparent transparent transparent #001860;
                              -fx-border-width: 0 0 0 4; -fx-border-radius: 0 16 16 0;">
                     <Label fx:id="lblTotalHorasMes" text="0 h"
-                           style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #3f51b5;"/>
+                           style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #001860;"/>
                     <Label text="Horas este mes"
                            style="-fx-text-fill: #90a4ae; -fx-font-size: 13px;"/>
                 </VBox>

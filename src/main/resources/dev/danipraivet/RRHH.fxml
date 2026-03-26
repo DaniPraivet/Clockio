@@ -11,7 +11,7 @@
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="16"
-              style="-fx-background-color: #1b5e20;
+              style="-fx-background-color: #124914;
                      -fx-padding: 14 28;
                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);">
             <Label text="Clockio · Recursos Humanos"
@@ -43,7 +43,7 @@
                                        text="Entrada"
                                        onAction="#onFicharRRHH"
                                        prefWidth="240" prefHeight="56"
-                                       style="-fx-background-color: #2e7d32;
+                                       style="-fx-background-color: #124914;
                                       -fx-text-fill: white;
                                       -fx-font-size: 17px; -fx-font-weight: bold;
                                       -fx-background-radius: 12; -fx-cursor: hand;"/>
@@ -63,7 +63,7 @@
                             <Region HBox.hgrow="ALWAYS"/>
                             <MFXButton fx:id="btnNuevo"
                                        text="+ Nuevo empleado" onAction="#onNuevo"
-                                       style="-fx-background-color: #1b5e20; -fx-text-fill: white;
+                                       style="-fx-background-color: #124914; -fx-text-fill: white;
                                               -fx-background-radius: 8; -fx-cursor: hand;
                                               -fx-font-weight: bold; -fx-padding: 10 16;"/>
                         </HBox>
@@ -85,7 +85,7 @@
                                  -fx-effect: dropshadow(gaussian, rgba(27,94,32,0.14), 14, 0, 0, 4);">
 
                         <Label text="Ficha de empleado"
-                               style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #1b5e20;"/>
+                               style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #124914;"/>
                         <Separator/>
 
                         <MFXTextField fx:id="txtFormCod" floatingText="Código *" maxWidth="Infinity"/>
@@ -110,7 +110,7 @@
                             <MFXButton fx:id="btnGuardar" text="Guardar"
                                        onAction="#onGuardar"
                                        HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                       style="-fx-background-color: #1b5e20; -fx-text-fill: white;
+                                       style="-fx-background-color: #124914; -fx-text-fill: white;
                                               -fx-cursor: hand; -fx-background-radius: 8;
                                               -fx-font-weight: bold; -fx-padding: 10;"/>
                             <MFXButton fx:id="btnBaja" text="Dar de baja"
@@ -129,7 +129,7 @@
                     <center>
                         <VBox spacing="24" style="-fx-padding: 36;" maxWidth="660" alignment="CENTER">
                             <Label text="Generar informe de asistencia"
-                                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1b5e20;"/>
+                                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #124914;"/>
 
                             <VBox spacing="18"
                                   style="-fx-background-color: white; -fx-background-radius: 16;
@@ -165,7 +165,7 @@
                                     <MFXButton fx:id="btnGenerarExcel"
                                                text="Exportar Excel" onAction="#onGenerarExcel"
                                                HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="48"
-                                               style="-fx-background-color: #1b5e20; -fx-text-fill: white;
+                                               style="-fx-background-color: #124914; -fx-text-fill: white;
                                               -fx-font-size: 14px; -fx-font-weight: bold;
                                               -fx-background-radius: 10; -fx-cursor: hand;"/>
                                 </HBox>
