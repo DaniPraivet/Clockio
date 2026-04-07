@@ -15,7 +15,7 @@
         style="-fx-background-color: #E8EAF6;">
 
     <center>
-        <VBox alignment="CENTER" spacing="20" maxWidth="400"
+        <VBox alignment="CENTER" spacing="20" maxWidth="400" maxHeight="550"
               style="-fx-background-color: white;
                      -fx-background-radius: 18;
                      -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.22), 28, 0, 0, 8);
@@ -60,7 +60,7 @@
             <MFXButton fx:id="btnLogin"
                        text="Entrar"
                        maxWidth="Infinity"
-                       prefHeight="48"
+                       prefHeight="52"
                        onAction="#onLogin"
                        style="-fx-background-color: #000057;
                               -fx-text-fill: white;

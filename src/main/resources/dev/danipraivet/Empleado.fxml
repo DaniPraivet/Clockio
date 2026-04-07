@@ -52,7 +52,7 @@
                 </VBox>
 
                 <VBox alignment="CENTER" spacing="6"
-                      style="-fx-background-color: white; -fx-background-radius: 16;
+                      style="-fx-background-color: white; -fx-background-radius: 0;
                              -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.14), 16, 0, 0, 5);
                              -fx-padding: 28 32;
                              -fx-border-color: transparent transparent transparent #001860;
