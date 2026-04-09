@@ -30,7 +30,7 @@
     <center>
         <VBox spacing="20" style="-fx-padding: 28;">
 
-            <Label fx:id="lblBienvenida" text="Bienvenido"
+            <Label fx:id="lblBienvenida" text="Bienvenid@"
                    style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1a237e;"/>
 
             <HBox spacing="20">

@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -88,7 +89,7 @@ public class Aplicacion extends Application {
     }
 
     private void mostrarErrorConexion() {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error de conexion");
         alert.setHeaderText("No se puede conectar a la base de datos");
         alert.setContentText("Comprueba que:\n" + "  - MySQL esta en ejecucion\n" + "  - Las credenciales en ConfiguracionBD.java son correctas\n" + "  - El script SQL ha sido ejecutado en Workbench");

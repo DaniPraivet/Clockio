@@ -130,11 +130,10 @@
                         <MFXTextField fx:id="txtFormDni" floatingText="DNI *" maxWidth="Infinity"/>
                         <MFXTextField fx:id="txtFormEmail" floatingText="Email" maxWidth="Infinity"/>
                         <MFXTextField fx:id="txtFormTelefono" floatingText="Teléfono" maxWidth="Infinity"/>
-                        <MFXTextField fx:id="txtFormUsername" floatingText="Username *" maxWidth="Infinity"/>
+                        <MFXComboBox fx:id="cmbFormDpto" floatingText="Departamento" maxWidth="Infinity"/>
+                        <MFXTextField fx:id="txtFormUsername" floatingText="Nombre de usuario *" maxWidth="Infinity"/>
                         <MFXPasswordField fx:id="txtFormContrasena" floatingText="Contraseña *" maxWidth="Infinity"/>
-
-                        <Label text="Rol" style="-fx-font-size: 12px; -fx-text-fill: #78909c;"/>
-                        <MFXComboBox fx:id="cmbFormRol" maxWidth="Infinity" prefHeight="40"/>
+                        <MFXComboBox fx:id="cmbFormRol" maxWidth="Infinity" floatingText="Rol" prefHeight="40"/>
 
                         <Label fx:id="lblFormMensaje" wrapText="true"
                                style="-fx-font-size: 12px;" visible="false"/>

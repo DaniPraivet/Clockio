@@ -1,5 +1,6 @@
 package dev.danipraivet.controlador;
 
+import dev.danipraivet.modelo.entidades.Departamento;
 import dev.danipraivet.modelo.entidades.Empleado;
 import dev.danipraivet.modelo.entidades.Fichaje;
 import dev.danipraivet.modelo.enumeraciones.Rol;
@@ -31,9 +32,7 @@ import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ControladorRRHH implements Initializable {
 
@@ -102,6 +101,8 @@ public class ControladorRRHH implements Initializable {
     private TextField txtFormTelefono;
     @FXML
     private TextField txtFormUsername;
+    @FXML
+    private MFXComboBox<Departamento> cmbFormDpto;
     @FXML
     private MFXPasswordField txtFormContrasena;
     @FXML
@@ -355,6 +356,18 @@ public class ControladorRRHH implements Initializable {
 
     private void configurarFormulario() {
         cmbFormRol.setItems(FXCollections.observableArrayList(Rol.values()));
+        List<Empleado> empleadoConDepartamentos = servicioEmpleado.listarTodos();
+        List<Departamento> departamentos = new ArrayList<>();
+        for (Empleado e : empleadoConDepartamentos) {
+            Departamento d = e.getDepartamento();
+            if (d != null && d.getNombre() != null && !d.getNombre().isBlank()) {
+                departamentos.add(d);
+            }
+        }
+        Set<Departamento> conjuntoDepartamentos = new HashSet<>(departamentos);
+        conjuntoDepartamentos.removeIf(d -> d.getNombre().isBlank());
+        List<Departamento> listaFinal = new ArrayList<>(conjuntoDepartamentos);
+        cmbFormDpto.setItems(FXCollections.observableArrayList(listaFinal));
         habilitarFormulario(false);
     }
 
@@ -373,6 +386,7 @@ public class ControladorRRHH implements Initializable {
         txtFormDni.setText(e.getDni());
         txtFormEmail.setText(e.getEmail() != null ? e.getEmail() : "");
         txtFormTelefono.setText(e.getTelefono() != null ? e.getTelefono() : "");
+        cmbFormDpto.setText(e.getDepartamento() != null ? e.getDepartamento().getNombre() : "");
         txtFormUsername.setText(e.getUsername());
         txtFormContrasena.clear();
         cmbFormRol.setValue(e.getRol());
@@ -394,6 +408,7 @@ public class ControladorRRHH implements Initializable {
             e.setDni(txtFormDni.getText().trim().toUpperCase());
             e.setEmail(txtFormEmail.getText().trim());
             e.setTelefono(txtFormTelefono.getText().trim());
+            e.setDepartamento(cmbFormDpto.getValue() != null ? cmbFormDpto.getValue() : new Departamento("",""));
             e.setUsername(txtFormUsername.getText().trim().toLowerCase());
             e.setRol(cmbFormRol.getValue() != null ? cmbFormRol.getValue() : Rol.EMPLEADO);
             return e;
@@ -411,6 +426,7 @@ public class ControladorRRHH implements Initializable {
         txtFormDni.clear();
         txtFormEmail.clear();
         txtFormTelefono.clear();
+        cmbFormDpto.clear();
         txtFormUsername.clear();
         txtFormContrasena.clear();
         cmbFormRol.setValue(Rol.EMPLEADO);
@@ -424,6 +440,7 @@ public class ControladorRRHH implements Initializable {
         txtFormDni.setDisable(!habilitar);
         txtFormEmail.setDisable(!habilitar);
         txtFormTelefono.setDisable(!habilitar);
+        cmbFormDpto.setDisable(!habilitar);
         txtFormUsername.setDisable(!habilitar);
         txtFormContrasena.setDisable(!habilitar);
         cmbFormRol.setDisable(!habilitar);

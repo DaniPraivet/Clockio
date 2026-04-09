@@ -80,7 +80,7 @@ public class ControladorEmpleado implements Initializable {
 
     // Refresca todos los componentes de la vista con el estado actual del empleado
     private void actualizarVista() {
-        lblBienvenida.setText("Bienvenido, " + GestorSesion.getNombreCompleto());
+        lblBienvenida.setText("Bienvenid@, " + GestorSesion.getNombreCompleto());
         lblFechaHora.setText(LocalDate.now().format(FMT_FECHA));
 
         boolean fichado = servicioFichaje.estaFichadoHoy();
