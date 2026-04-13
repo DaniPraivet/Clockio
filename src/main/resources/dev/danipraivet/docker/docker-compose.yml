@@ -1,0 +1,19 @@
+services:
+  mysql:
+    image: mysql:9.6
+    ports:
+      - '3306:3306'
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_spanish_ci
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_spanish_ci
+    environment:
+      MYSQL_DATABASE: control_asistencia
+      MYSQL_ROOT_PASSWORD: usuario
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+
+volumes:
+  db_data:

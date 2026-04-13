@@ -7,11 +7,11 @@
         xmlns:fx="http://javafx.com/fxml/1"
         xmlns="http://javafx.com/javafx/21"
         fx:controller="dev.danipraivet.controlador.ControladorAdmin"
-        style="-fx-background-color: #EDE7F6;">
+        style="-fx-background-color: #E8EAF6;">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="16"
-              style="-fx-background-color: #4a0072;
+              style="-fx-background-color: #001860;
                      -fx-padding: 14 28;
                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0, 0, 4);">
             <Label text="Clockio · Administrador"
@@ -34,7 +34,7 @@
                 <VBox spacing="24" style="-fx-padding: 32;">
                     <HBox spacing="20">
                         <VBox alignment="CENTER" spacing="8" HBox.hgrow="ALWAYS"
-                              style="-fx-background-color: white; -fx-background-radius: 16;
+                              style="-fx-background-color: white; -fx-background-radius: 0 16 16 0;
                                      -fx-effect: dropshadow(gaussian, rgba(21,101,192,0.16), 16, 0, 0, 5);
                                      -fx-padding: 30 24;
                                      -fx-border-color: transparent transparent transparent #1565C0;
@@ -46,7 +46,7 @@
                         </VBox>
 
                         <VBox alignment="CENTER" spacing="8" HBox.hgrow="ALWAYS"
-                              style="-fx-background-color: white; -fx-background-radius: 16;
+                              style="-fx-background-color: white; -fx-background-radius: 0 16 16 0;
                                      -fx-effect: dropshadow(gaussian, rgba(27,94,32,0.16), 16, 0, 0, 5);
                                      -fx-padding: 30 24;
                                      -fx-border-color: transparent transparent transparent #2e7d32;
@@ -57,10 +57,10 @@
                                    style="-fx-text-fill: #90a4ae; -fx-font-size: 13px;"/>
                         </VBox>
                         <VBox alignment="CENTER" spacing="14" HBox.hgrow="ALWAYS"
-                              style="-fx-background-color: white; -fx-background-radius: 16;
-                                     -fx-effect: dropshadow(gaussian, rgba(74,0,114,0.16), 16, 0, 0, 5);
+                              style="-fx-background-color: white; -fx-background-radius: 0 16 16 0;
+                                     -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.14), 16, 0, 0, 5);
                                      -fx-padding: 30 24;
-                                     -fx-border-color: transparent transparent transparent #4a0072;
+                                     -fx-border-color: transparent transparent transparent #001860;
                                      -fx-border-width: 0 0 0 5; -fx-border-radius: 0 16 16 0;">
                             <Label fx:id="lblEstadoAdmin" text=""
                                    style="-fx-font-size: 13px; -fx-text-fill: #90a4ae;"/>
@@ -88,7 +88,7 @@
                             <MFXDatePicker fx:id="dpFichajeHasta" prefWidth="150"/>
                             <MFXButton fx:id="btnBuscarFichajes"
                                        text="Buscar" onAction="#onBuscarFichajes"
-                                       style="-fx-background-color: #4a0072; -fx-text-fill: white;
+                                       style="-fx-background-color: #001860; -fx-text-fill: white;
                                               -fx-cursor: hand; -fx-background-radius: 8;
                                               -fx-font-weight: bold; -fx-padding: 10 16;"/>
                         </HBox>
@@ -110,7 +110,7 @@
                                  -fx-effect: dropshadow(gaussian, rgba(74,0,114,0.14), 14, 0, 0, 4);">
 
                         <Label text="Editar fichaje"
-                               style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #4a0072;"/>
+                               style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #001860;"/>
                         <Separator/>
 
                         <MFXTextField fx:id="txtEditEntrada" floatingText="Hora entrada (HH:mm)" maxWidth="Infinity"/>
@@ -125,14 +125,14 @@
                                   promptText="Notas opcionales..."
                                   style="-fx-background-radius: 8;
                                          -fx-border-radius: 8;
-                                         -fx-border-color: #ce93d8;"/>
+                                         -fx-border-color: #72b7dd;"/>
 
                         <Separator/>
 
                         <MFXButton fx:id="btnGuardarFichaje"
                                    text="Guardar cambios" onAction="#onGuardarFichaje"
                                    maxWidth="Infinity"
-                                   style="-fx-background-color: #4a0072; -fx-text-fill: white;
+                                   style="-fx-background-color: #001860; -fx-text-fill: white;
                                           -fx-cursor: hand; -fx-background-radius: 8;
                                           -fx-font-weight: bold; -fx-padding: 10;"/>
                         <MFXButton fx:id="btnEliminarFichaje"

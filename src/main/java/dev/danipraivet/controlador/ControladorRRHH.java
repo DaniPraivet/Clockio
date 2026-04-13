@@ -13,6 +13,7 @@ import dev.danipraivet.vista.Aplicacion;
 import dev.danipraivet.vista.utilidades.GestorAlertas;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import javafx.application.Platform;

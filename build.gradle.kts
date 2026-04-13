@@ -60,6 +60,10 @@ tasks.jar {
 
 tasks.named<JavaExec>("run") {
     jvmArgs = listOf(
+        "-Dfile.encoding=UTF-8",
+        "-Dstdout.encoding=UTF-8",
+        "-Dsun.stdout.encoding=UTF-8",
+        "-Dsun.jnu.encoding=UTF-8",
         "--add-opens", "javafx.graphics/com.sun.javafx.application=ALL-UNNAMED",
         "--add-opens", "javafx.base/com.sun.javafx=ALL-UNNAMED",
         "--add-opens", "javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED"

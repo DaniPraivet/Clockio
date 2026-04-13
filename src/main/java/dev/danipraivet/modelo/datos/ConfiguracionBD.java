@@ -41,10 +41,12 @@ public final class ConfiguracionBD {
 
         String ssl = props.getProperty("db.useSSL", "false");
         String timezone = props.getProperty("db.serverTimezone", "Europe/Madrid");
-        String encoding = props.getProperty("db.characterEncoding", "UTF-8");
         String publicKey = props.getProperty("db.allowPublicKeyRetrieval", "true");
+        String encoding = props.getProperty("db.encoding", "UTF-8");
 
-        URL = String.format("jdbc:mysql://%s:%s/%s?useSSL=%s&serverTimezone=%s&characterEncoding=%s&allowPublicKeyRetrieval=%s", HOST, PORT, DATABASE, ssl, timezone, encoding, publicKey);
+        URL = String.format(
+                "jdbc:mysql://%s:%s/%s?useSSL=%s&serverTimezone=%s&characterEncoding=%s&allowPublicKeyRetrieval=%s&useUnicode=true&connectionInitSql=SET%%20NAMES%%20utf8mb4",
+                HOST, PORT, DATABASE, ssl, timezone, encoding, publicKey);
 
         EMPLEADO_USER = props.getProperty("db.empleado.user", "empleado");
         EMPLEADO_PASS = props.getProperty("db.empleado.pass", "");

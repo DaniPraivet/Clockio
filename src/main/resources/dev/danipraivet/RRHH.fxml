@@ -35,6 +35,7 @@
 
                     <Label fx:id="lblBienvenidaRRHH" text="Bienvenido"
                            style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1a237e;"/>
+                    <Label text="García Martínez Rodríguez" />
 
                     <HBox spacing="20">
                         <VBox alignment="CENTER" spacing="18" HBox.hgrow="ALWAYS"
@@ -102,7 +103,7 @@
                                               -fx-background-radius: 8; -fx-cursor: hand;
                                               -fx-font-weight: bold; -fx-padding: 10 16;"/>
                         </HBox>
-                        <TableView fx:id="tablaEmpleados" VBox.vgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity">
+                        <TableView fx:id="tablaEmpleados" style="-fx-font-family: 'System';" VBox.vgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity">
                             <columns>
                                 <TableColumn fx:id="colCod" text="Cód." prefWidth="60"/>
                                 <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
