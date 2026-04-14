@@ -28,6 +28,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ControladorAdmin implements Initializable {
 
@@ -110,6 +113,7 @@ public class ControladorAdmin implements Initializable {
         configurarTablaFichajes();
         configurarTablaEmpleados();
         Platform.runLater(this::cargarDatos);
+        Aplicacion.iniciarScheduler(() -> Platform.runLater(this::actualizarDashboard), 60);
     }
 
     @FXML
@@ -236,7 +240,11 @@ public class ControladorAdmin implements Initializable {
 
     private void actualizarDashboard() {
         lblNombreAdmin.setText("Admin: " + GestorSesion.getNombreCompleto());
-        lblTotalEmpleados.setText(String.valueOf(empleados.size()));
+
+        long activos = empleados.stream().filter(Empleado::isActivo).count();
+        lblTotalEmpleados.setText(String.valueOf(activos));
+
+        lblFichadosHoy.setText(String.valueOf(servicioFichaje.contarFichadosHoy()));
 
         boolean fichado = servicioFichaje.estaFichadoHoy();
         if (fichado) {

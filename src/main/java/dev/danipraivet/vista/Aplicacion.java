@@ -1,5 +1,6 @@
 package dev.danipraivet.vista;
 
+import dev.danipraivet.controlador.ControladorAdmin;
 import dev.danipraivet.modelo.datos.GestorConexiones;
 import io.github.palexdev.materialfx.theming.JavaFXThemes;
 import io.github.palexdev.materialfx.theming.MaterialFXStylesheets;
@@ -17,6 +18,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Aplicacion extends Application {
 
@@ -24,6 +28,7 @@ public class Aplicacion extends Application {
     private static final double ANCHO = 1100;
     private static final double ALTO = 700;
     private static Stage escenarioPrincipal;
+    private static ScheduledExecutorService scheduler;
 
     public static void navegarA(String vista) {
         try {
@@ -86,6 +91,9 @@ public class Aplicacion extends Application {
     public void stop() {
         log.info("Cerrando aplicacion y liberando conexiones...");
         GestorConexiones.cerrarPool();
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdown();
+        }
     }
 
     private void mostrarErrorConexion() {
@@ -95,5 +103,10 @@ public class Aplicacion extends Application {
         alert.setContentText("Comprueba que:\n" + "  - MySQL esta en ejecucion\n" + "  - Las credenciales en ConfiguracionBD.java son correctas\n" + "  - El script SQL ha sido ejecutado en Workbench");
         alert.showAndWait();
         escenarioPrincipal.show();
+    }
+
+    public static void iniciarScheduler(Runnable tarea, int intervaloSegundos) {
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(tarea, intervaloSegundos, intervaloSegundos, TimeUnit.SECONDS);
     }
 }

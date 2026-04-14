@@ -27,4 +27,5 @@ public interface IRepositorioFichaje {
 
     // Comprueba si el empleado tiene un fichaje abierto hoy (sin salida registrada)
     boolean estaFichadoHoy(int codEmpleado);
+    int contarFichadosHoy();
 }

@@ -75,4 +75,7 @@ public class ServicioFichaje {
     public boolean eliminar(int id) {
         return repo.eliminar(id);
     }
+    public int contarFichadosHoy() {
+        return repo.contarFichadosHoy();
+    }
 }

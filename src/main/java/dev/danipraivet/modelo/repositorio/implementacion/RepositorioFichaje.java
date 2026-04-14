@@ -30,6 +30,7 @@ public class RepositorioFichaje implements IRepositorioFichaje {
     // Stored procedure de MySQL para registrar fichaje
     private static final String SQL_REGISTRAR_FICHAJE = "CALL registrar_fichaje(?, @p_mensaje, @p_tipo)";
     private static final String SQL_GET_OUT_PARAMS = "SELECT @p_mensaje AS mensaje, @p_tipo AS tipo";
+    private static final String SQL_FICHADOS_HOY = "SELECT COUNT(*) FROM dias WHERE fecha = CURRENT_DATE AND entrada_hora IS NOT NULL AND salida_hora IS NULL";
     private final Rol rolConexion;
     public RepositorioFichaje(Rol rolConexion) {
         this.rolConexion = rolConexion;
@@ -232,5 +233,20 @@ public class RepositorioFichaje implements IRepositorioFichaje {
         if (modEn != null) f.setModificadoEn(modEn.toLocalDateTime());
 
         return f;
+    }
+
+
+    public int contarFichadosHoy() {
+        Connection con = null;
+        try {
+            con = GestorConexiones.getConexion(rolConexion);
+            ResultSet rs = con.createStatement().executeQuery(SQL_FICHADOS_HOY);
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            log.error("Error en contarFichadosHoy: {}", e.getMessage());
+        } finally {
+            GestorConexiones.liberarConexion(rolConexion, con);
+        }
+        return 0;
     }
 }
