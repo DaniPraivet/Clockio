@@ -11,8 +11,8 @@ import javafx.scene.input.InputEvent;
 import javafx.util.Duration;
 
 public class GestorInactividad {
-    private static final int TIEMPO_TOTAL = 15;
-    private static final int TIEMPO_AVISO = 10;
+    private static final int TIEMPO_TOTAL = 180;
+    private static final int TIEMPO_AVISO = 30;
 
     private static Timeline timeline;
     private static Alert alertaActual;
