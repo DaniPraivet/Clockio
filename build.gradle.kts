@@ -28,7 +28,7 @@ dependencies {
     implementation("io.github.palexdev:materialfx:11.17.0")
     implementation("com.mysql:mysql-connector-j:8.4.0")
     implementation("org.mindrot:jbcrypt:0.4")
-    implementation("com.itextpdf:itext7-core:7.2.5")
+    implementation("com.itextpdf:itext7-core:7.2.6")
     implementation("org.apache.poi:poi-ooxml:5.5.1")
     compileOnly("org.projectlombok:lombok:1.18.46")
     annotationProcessor("org.projectlombok:lombok:1.18.46")
