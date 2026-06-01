@@ -32,7 +32,7 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.5.1")
     compileOnly("org.projectlombok:lombok:1.18.46")
     annotationProcessor("org.projectlombok:lombok:1.18.46")
-    implementation("ch.qos.logback:logback-classic:1.5.32")
+    implementation("ch.qos.logback:logback-classic:1.5.34")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.14.4")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.14.4")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.14.4")
